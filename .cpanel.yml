@@ -11,7 +11,7 @@ deployment:
     - echo "Restoring .NET dependencies..."
     - dotnet restore
     - echo "Publishing the application..."
-    - dotnet publish --configuration Release --output $DEPLOYPATH/publish
+    - dotnet publish --configuration Release --framework net8.0 --output $DEPLOYPATH/publish
     - echo "Copying published files to web root..."
     - rsync -av --delete $DEPLOYPATH/publish/ $DEPLOYPATH/
     - echo "Deployment completed."
