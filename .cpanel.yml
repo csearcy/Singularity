@@ -1,8 +1,11 @@
 deployment:
   tasks:
+
     - export DEPLOYPATH=/home/xmk0ntz9ysfn/public_html/singularitygaming.gg
     - echo "Starting deployment..."
     - cd $DEPLOYPATH
+    - echo "Installing .net8"
+    - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel Current
     - echo "Pulling latest changes from GitHub..."
     - git pull origin master
     - echo "Restoring .NET dependencies..."
