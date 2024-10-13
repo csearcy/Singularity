@@ -1,0 +1,154 @@
+body {
+    margin: 0px;
+    min-width:800px;
+    background-color: #121212;
+}
+
+/* Top Logo Bar CSS*/
+.logo-bar {
+    Position: relative;
+    background-color: #121212;
+    display: flex;
+    align-items: center;
+    top: 0px;
+    Height: 70px;
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+.logo-div {
+    float: left;
+    Height:55px;
+    width: 218px;
+}
+
+.logo-img {
+    display: block;
+    Height:55px;
+    width: 218px;
+
+}
+
+/* Main Navigation Bar */
+.nav-bar {
+    Position: sticky;
+    z-index: 10;
+    top: 0px;
+    Height: 45px;
+    width: 100%;
+    background-image: linear-gradient( to bottom, #2d1049, #000000);
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,1);
+    
+}
+
+.menu-wrapper {
+    margin: auto;
+    width: 1500px;
+}
+
+.menu-link {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    Height: 45px;
+    padding-left: 30px;
+    padding-right: 60px;
+}
+
+.menu:active {
+    text-decoration: none;
+    color: #777777;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow: -1px 1px 0 #000,
+                 1px 1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px -1px 0 #000;
+    font-size: 1.5em;
+}
+
+.menu:link {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow: -1px 1px 0 #000,
+                 1px 1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px -1px 0 #000;
+    font-size: 1.5em;
+}
+
+.menu:visited {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow: -1px 1px 0 #000,
+                 1px 1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px -1px 0 #000;
+    font-size: 1.5em;
+}
+
+.menu:hover {
+    text-decoration: none;
+    color: #999999;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow: -1px 1px 0 #000,
+                 1px 1px 0 #000,
+                 1px -1px 0 #000,
+                 -1px -1px 0 #000;
+    font-size: 1.5em;
+}
+
+
+/* Main Content */
+.webpage {
+    display: flex;
+    width:1500px;
+    margin: auto;
+    overflow: auto;
+    margin-top: 10px;
+    background-color: #6666ff;
+    
+}
+
+.wrapper-left {
+    overflow: auto;
+    width:1000px;
+    background-color: #1b1b1b;
+}
+
+.banner {
+    border-radius: 5px;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 1.0);
+    margin: 20px;
+    height: 190px;
+    width:960px;
+    background-image: linear-gradient( to bottom, #2d1049, #000000);
+    
+}
+
+.content {
+    margin-top: none;
+    margin:20px;
+    overflow: auto;
+    width:960px;
+    background-color: #ff6666;
+}
+
+.footer {
+    margin: 20px;
+    overflow: auto;
+    background-color: #66ff66;
+}
+
+.wrapper-right {
+    overflow: auto;
+    width:500px;
+    background-color: #161616;
+}
