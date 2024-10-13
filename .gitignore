@@ -85,3 +85,7 @@ obj/Debug/net8.0/staticwebassets.pack.json
 obj/Debug/net8.0/ref/Singularity.dll
 obj/Debug/net8.0/refint/Singularity.dll
 obj/Debug/net8.0/staticwebassets/msbuild.Singularity.Microsoft.AspNetCore.StaticWebAssets.props
+obj/Debug/net8.0/Singularity.AssemblyInfo.cs
+obj/Debug/net8.0/Singularity.AssemblyInfoInputs.cache
+obj/Debug/net8.0/Singularity.csproj.FileListAbsolute.txt
+obj/Debug/net8.0/Singularity.GeneratedMSBuildEditorConfig.editorconfig
