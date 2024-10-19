@@ -4,7 +4,24 @@ body {
     background-color: #121212;
 }
 
-/* Top Logo Bar CSS*/
+/* text definitions */
+.logo {
+    text-decoration: none;
+    letter-spacing: 2px;
+    -webkit-text-stroke: 1px #4be4b3;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow:
+      0 0 1px #4be4b3,
+      0 0 3px #4be4b3,
+      0 0 7px #4be4b3,
+      0 0 12px #4be4b3,
+      0 0 17px #4be4b3;
+    font-size: 1.8em;
+    line-height: 55px;}
+
+/* Top Logo Bar CSS */
 .logo-bar {
     Position: relative;
     background-color: #121212;
@@ -15,17 +32,18 @@ body {
     width: 100%;
     border-top: 1px solid black;
 }
-
 .logo-div {
     float: left;
     Height:55px;
-    width: 218px;
+    width: 300px;
 }
 
 .logo-img {
+    float:left;
+    margin-right:10px;
     display: block;
     Height:55px;
-    width: 218px;
+    width: 55px;
 
 }
 
@@ -36,14 +54,14 @@ body {
     top: 0px;
     Height: 45px;
     width: 100%;
-    background-image: linear-gradient( to bottom, #2d1049, #000000);
+    background-image: linear-gradient( to bottom, #000000, #29035d);
     box-shadow: 0px 5px 5px 0px rgba(0,0,0,1);
     
 }
 
 .menu-wrapper {
     margin: auto;
-    width: 1500px;
+    width: 1200px;
 }
 
 .menu-link {
@@ -58,97 +76,169 @@ body {
 }
 
 .menu:active {
+    transition: .5s;
     text-decoration: none;
-    color: #777777;
+    color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
-    text-shadow: -1px 1px 0 #000,
-                 1px 1px 0 #000,
-                 1px -1px 0 #000,
-                 -1px -1px 0 #000;
     font-size: 1.5em;
 }
 
 .menu:link {
+    transition: .5s;
     text-decoration: none;
+    -webkit-text-stroke: 1px #4be4b3;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
-    text-shadow: -1px 1px 0 #000,
-                 1px 1px 0 #000,
-                 1px -1px 0 #000,
-                 -1px -1px 0 #000;
-    font-size: 1.5em;
+      font-size: 1.5em;
 }
 
+
 .menu:visited {
+    transition: .5s;
     text-decoration: none;
+    -webkit-text-stroke: 1px #4be4b3;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
-    text-shadow: -1px 1px 0 #000,
-                 1px 1px 0 #000,
-                 1px -1px 0 #000,
-                 -1px -1px 0 #000;
     font-size: 1.5em;
 }
 
 .menu:hover {
+    transition: .5s;
     text-decoration: none;
-    color: #999999;
+    -webkit-text-stroke: 1px #4be4b3;
+    color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
-    text-shadow: -1px 1px 0 #000,
-                 1px 1px 0 #000,
-                 1px -1px 0 #000,
-                 -1px -1px 0 #000;
+    text-shadow:
+      0 0 1px #4be4b3,
+      0 0 3px #4be4b3,
+      0 0 7px #4be4b3,
+      0 0 12px #4be4b3,
+      0 0 17px #4be4b3;
     font-size: 1.5em;
 }
 
 
-/* Main Content */
+/* Main Page layout*/
 .webpage {
     display: flex;
-    width:1500px;
+    width:1200px;
     margin: auto;
+    margin-top:30px;
+    margin-bottom:200px;
     overflow: auto;
-    margin-top: 10px;
-    background-color: #6666ff;
-    
+    background-color: #161616;
+    clip-path: inset(0px -10px -10px 0px);
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 1.0);
 }
 
 .wrapper-left {
+    position:relative;
+    z-index: 2;
     overflow: auto;
-    width:1000px;
+    width:800px;
     background-color: #1b1b1b;
+    clip-path: inset(0px -10px 0px 0px);
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 1.0);
 }
 
-.banner {
+.wrapper-right {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    width: 400px;
+    height:240px;
+}
+
+/* Banner Content layout*/
+.banner-wrapper {
     border-radius: 5px;
     box-shadow: 0 -1px 10px rgba(0, 0, 0, 1.0);
     margin: 20px;
     height: 190px;
-    width:960px;
-    background-image: linear-gradient( to bottom, #2d1049, #000000);
+    width:760px;
+    background-image: linear-gradient( to bottom, #000000, #29035d);
     
 }
 
-.content {
-    margin-top: none;
-    margin:20px;
-    overflow: auto;
-    width:960px;
-    background-color: #ff6666;
+.banner {
+    height: 190px;
+    width:760px;
+    background-image: url(/images/logos/singularitywatermark2.png);
+    background-position: center;
+    background-repeat:no-repeat;
+    background-size: 500px, 500px;
+    
 }
 
+/* Content Section layout*/
+.wrapper-content {
+    margin-top: none;
+    width:800px;
+}
+
+.title-bar {
+    position: relative;
+    margin: auto;
+    margin-top: 20px;
+    inset 2px 0px 0px 0px #4be4b3;
+    -webkit-box-shadow:inset 3px 0px 0px 0px #4be4b3;
+  -moz-box-shadow:inset 3px 0px 0px 0px #4be4b3;
+  box-shadow:inset 3px 0px 0px 0px #4be4b3;
+    background-image: linear-gradient(to right, rgba(75, 228, 179, .4), rgba(0, 0, 0, 0));
+    width: 100%;
+    height: 40px;
+}
+
+.title-name {
+    margin-left:20px;
+}
+.title-text {
+    text-transform: uppercase;
+    font-family: 'Orbitron';
+    line-height: 40px;
+    color: #4be4b3;
+    font-weight: bold;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.div-content {
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 85%;
+    align-items: center;
+    border-radius: 4px;
+    font-family: 'Roboto Condensed';
+    color: #ffffff;
+    font-size: 1.2em;
+    background-image: url(/images/logos/singularitywatermark2.png);
+    background-size: 250px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #131313;
+}
+.content-text {
+    font-weight: normal;
+    font-family: 'Orbitron';
+    color: #4be4b3;
+    margin: 20px;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    display: block;
+}
+/* Footer Content layout*/
 .footer {
     margin: 20px;
     overflow: auto;
     background-color: #66ff66;
-}
-
-.wrapper-right {
-    overflow: auto;
-    width:500px;
-    background-color: #161616;
 }
