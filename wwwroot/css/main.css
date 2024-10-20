@@ -19,7 +19,8 @@ body {
       0 0 12px #4be4b3,
       0 0 17px #4be4b3;
     font-size: 1.8em;
-    line-height: 55px;}
+    line-height: 55px;
+}
 
 /* Top Logo Bar CSS */
 .logo-bar {
@@ -32,6 +33,7 @@ body {
     width: 100%;
     border-top: 1px solid black;
 }
+
 .logo-div {
     float: left;
     Height:55px;
@@ -44,7 +46,6 @@ body {
     display: block;
     Height:55px;
     width: 55px;
-
 }
 
 /* Main Navigation Bar */
@@ -56,7 +57,6 @@ body {
     width: 100%;
     background-image: linear-gradient( to bottom, #000000, #29035d);
     box-shadow: 0px 5px 5px 0px rgba(0,0,0,1);
-    
 }
 
 .menu-wrapper {
@@ -160,8 +160,7 @@ body {
     margin: 20px;
     height: 190px;
     width:760px;
-    background-image: linear-gradient( to bottom, #000000, #29035d);
-    
+    background-image: linear-gradient( to bottom, #000000, #29035d);  
 }
 
 .banner {
@@ -171,8 +170,7 @@ body {
     background-position: center;
     background-repeat:no-repeat;
     background-size: 300px;
-    text-align: center;
-    
+    text-align: center;    
 }
 
 .banner-title {
@@ -210,6 +208,7 @@ body {
 
 .title-name {
     margin-left:20px;
+
 }
 .title-text {
     text-transform: uppercase;
@@ -237,6 +236,7 @@ body {
     background-repeat: no-repeat;
     background-color: #131313;
 }
+
 .content-text {
     font-weight: normal;
     font-family: 'Orbitron';
@@ -246,6 +246,7 @@ body {
     letter-spacing: 0.5px;
     display: block;
 }
+
 /* Footer Content layout*/
 .footer {
     margin: 20px;
