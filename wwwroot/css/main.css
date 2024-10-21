@@ -4,24 +4,6 @@ body {
     background-color: #121212;
 }
 
-/* text definitions */
-.logo {
-    text-decoration: none;
-    letter-spacing: 2px;
-    -webkit-text-stroke: 1px #4be4b3;
-    color: #ffffff;
-    font-weight: normal;
-    font-family: 'Orbitron';
-    text-shadow:
-      0 0 1px #4be4b3,
-      0 0 3px #4be4b3,
-      0 0 7px #4be4b3,
-      0 0 12px #4be4b3,
-      0 0 17px #4be4b3;
-    font-size: 1.8em;
-    line-height: 55px;
-}
-
 /* Top Logo Bar CSS */
 .logo-bar {
     Position: relative;
@@ -46,6 +28,23 @@ body {
     display: block;
     Height:55px;
     width: 55px;
+}
+
+.logo {
+    text-decoration: none;
+    letter-spacing: 2px;
+    -webkit-text-stroke: 1px #4be4b3;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    text-shadow:
+      0 0 1px #4be4b3,
+      0 0 3px #4be4b3,
+      0 0 7px #4be4b3,
+      0 0 12px #4be4b3,
+      0 0 17px #4be4b3;
+    font-size: 1.8em;
+    line-height: 55px;
 }
 
 /* Main Navigation Bar */
@@ -150,7 +149,6 @@ body {
     position: relative;
     z-index: 1;
     width: 400px;
-    height:240px;
 }
 
 /* Banner Content layout*/
@@ -166,7 +164,7 @@ body {
 .banner {
     height: 190px;
     width:760px;
-    background-image: url(/images/logos/singularitywatermark2.png);
+    background-image: url(/images/logos/singularitywatermark.png);
     background-position: center;
     background-repeat:no-repeat;
     background-size: 300px;
@@ -186,8 +184,7 @@ body {
       0 0 7px #4be4b3,
       0 0 12px #4be4b3,
       0 0 17px #4be4b3;
-    font-size: 7em;
-    line-height: 175px;
+    line-height: 190px;
 }
 
 /* Content Section layout*/
@@ -230,7 +227,7 @@ body {
     font-family: 'Roboto Condensed';
     color: #ffffff;
     font-size: 1.2em;
-    background-image: url(/images/logos/singularitywatermark2.png);
+    background-image: url(/images/logos/singularitywatermark.png);
     background-size: 250px;
     background-position: center;
     background-repeat: no-repeat;
@@ -248,8 +245,62 @@ body {
 }
 
 /* Footer Content layout*/
-.footer {
+.checkusout-wrapper {
+    margin: auto;
+    margin-bottom:20px;
+    width:100%;
+}
+
+.checkusout-left {
+    margin-left: 40px;
+    text-align: left;
+}
+
+.footer:link {
+    text-decoration: none;
+    -webkit-text-stroke: 1px #4be4b3;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    font-size: 1.5em;
+    display: block;
+    width: 100%;
+    padding-top:15px;
+    padding-bottom:15px;
+    background-color: #1b1b1b;
+    border-bottom:1px solid #121212;
+    text-align:center;
+}
+
+.footer:visited {
+    text-decoration: none;
+    -webkit-text-stroke: 1px #4be4b3;
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'Orbitron';
+    font-size: 1.5em;
+    display: block;
+    width: 100%;
+    padding-top:15px;
+    padding-bottom:15px;
+    background-color: #1b1b1b;
+    border-bottom:1px solid #121212;
+    text-align:center;
+}
+
+.footer:hover {
+    background-color: #1f1f1f;
+}
+
+.wrapper-event {
     margin: 20px;
-    overflow: auto;
-    background-color: #66ff66;
+    margin-bottom:65px;
+    border-radius:5px;
+    padding:20px;
+    min-height: 200px;
+    background-image: url("/images/logos/singularitywatermark.png");
+    background-size: 350px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #1b1b1b;
 }
