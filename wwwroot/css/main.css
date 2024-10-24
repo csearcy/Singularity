@@ -4,6 +4,10 @@ body {
     background-color: #121212;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Top Logo Bar CSS */
 .logo-bar {
     Position: relative;
