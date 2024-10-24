@@ -1,4 +1,4 @@
-﻿const APHELION_GUILD_ID = 11653;
+﻿const APHELION_GUILD_ID = 117005265;
 const RAIDS = [
     {
     "raiderIoApiName": "nerubar-palace",
@@ -29,7 +29,7 @@ const DIFFICULTY = "heroic";
 const CLIENT_ID = "b7f05a53efe4472fa4b3cb3d13906869";
 const CLIENT_SECRET = "hcGJNA2t64KUqLt02DjS8duZ1SVusrJf";
 const REALM_SLUG = "aerie-peak";
-const NAME_SLUG = "aphelion";
+const NAME_SLUG = "singularity";
 const RETRIES = 3;
 
 $(document).ready(function() {
