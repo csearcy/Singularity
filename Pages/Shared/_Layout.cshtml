@@ -1,33 +1,35 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <html>
+<html>
+
 <head>
-<title>Singularity</title>
-<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-<meta http-equiv="content-type" content="text/html; charset=utf-8" >
-<link rel="stylesheet" href="/css/main.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>Singularity</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 </head>
+
 <body>
-        
-            <partial name="_Header" />
-        
-<div class='webpage'>
-    <div class='wrapper-left'>
-        <div class='banner-wrapper'>
-            <div class='banner'>
-                <h1 class='banner-title'>Singularity</h1>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_Header" />
+
+    <div class='webpage'>
+        <div class='wrapper-left'>
+            <div class='banner-wrapper'>
+                <div class='banner'>
+                    <h1 class='banner-title'>Singularity</h1>
+                </div>
             </div>
-        </div>    
-            <main role="main" class="pb-3 content-main">
+            <main id="main-content" role="main" class="pb-3 content-main">
                 @RenderBody()
             </main>
-    </div>
+        </div>
 
-                <partial name="_Footer" />
-            
-</div>
+        <partial name="_Footer" />
+        <script src="~/js/site.js"></script>
+    </div>
 </body>
 </html>

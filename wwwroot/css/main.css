@@ -4,6 +4,10 @@ body {
     background-color: #121212;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Top Logo Bar CSS */
 .logo-bar {
     Position: relative;
@@ -304,3 +308,146 @@ body {
     background-repeat: no-repeat;
     background-color: #1b1b1b;
 }
+
+/* Raid Team Styling */
+
+.team-title {
+    display: none;
+ }
+ 
+ 
+ .team-div {
+     margin: auto;
+     margin-top: 15px;
+     margin-bottom: 15px;
+     position: relative;
+     display: flex;
+     width: 95%;
+     height:80px;
+     align-items: center;
+     background-color: rgba(0, 0, 0, .6);
+     border-radius: 4px;
+ }
+ 
+ .portrait {
+     position: relative;
+     width: 80px;
+     height:80px;
+     align-items: center;
+     border-right: 1px solid black;
+     border-radius: 4px 0px 0px 4px;
+     background-size: cover;
+     background-repeat: no-repeat;
+ }
+ 
+ .player-overlay {
+     position: absolute;
+     float: left;
+     display: none;
+     width: 80px;
+     height:80px;
+     align-items: center;
+     border-radius: 4px 0px 0px 4px;
+     background-image: linear-gradient(to right, rgba(000,000,000, 0) 60%, #222222 100%);
+ }
+ 
+ .player-portrait {
+     Height: 80px;
+     width: 80px;
+     border-radius: 4px 0px 0px 4px;
+ }
+ 
+ .player-info {
+     position: relative;
+     width: 90%;
+     height:80px;
+     border-radius: 4px;
+ }
+ 
+ .rosterbg {
+     width: 100%;
+     margin: auto;
+     margin-left: 15px;
+     font-family: 'Sofia Sans', sans-serif;
+     color: #ffffff;
+     text-shadow: -1px 1px 0 #000,
+                  1px 1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px -1px 0 #000;
+     font-size: 1em;
+ }
+ 
+ .rostername {
+     margin-top: 5px;
+     margin-left: 15px;
+     text-align: left;
+     font-family: 'Sofia Sans', sans-serif;
+     color:fff;
+     text-shadow: -1px 1px 0 #000,
+                  1px 1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px -1px 0 #000;
+     font-size: 1.2em;
+ }
+ 
+ .rosterinfotitle{
+     width:10%;
+     color: #87ceeb;
+ }
+ 
+ .rosterinfo{
+     width:23%;
+     text-align: left;
+ }
+ 
+ .Death-Knight {
+     color: #C41F3B;
+ }
+ 
+ .Demon-Hunter {
+     color: #A330C9;
+ }
+ 
+ .Druid {
+     color: #FF7D0A;
+ }
+ 
+ .Evoker {
+     color: #33937F;
+ }
+ 
+ .Hunter {
+     color: #ABD473;
+ }
+ 
+ .Mage {
+     color: #69CCF0;
+ }
+ 
+ .Monk {
+     color: #00FF96;
+ }
+ 
+ .Paladin {
+     color: #F58CBA;
+ }
+ 
+ .Priest {
+     color: #FFFFFF;
+ }
+ 
+ .Rogue {
+     color: #FFF569;
+ }
+ 
+ .Shaman {
+     color: #0070DE;
+ }
+ 
+ .Warlock {
+     color: #9482c9;
+ }
+ 
+ .Warrior {
+     color: #C79C6E;
+ }
