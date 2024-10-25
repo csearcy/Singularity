@@ -4,7 +4,7 @@ const Roles = {
 	RaidLeader: 3,
 	Banker: 4,
 	Raider: 6,
-	SecondaryRaider: 2
+	SecondaryRaider: 40
 }
 
 const RAID_EXPANSION_ID = 503; // On new expansion release, run Journal Expansions Index API (https://develop.battle.net/documentation/world-of-warcraft/game-data-apis) to get new expansion ID number.
