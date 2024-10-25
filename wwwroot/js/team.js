@@ -155,7 +155,7 @@ function GetMembers(guildMembers, retries) {
 }
 
 function SetRoleDiv(members, role) {
-    let wrapperDiv = document.getElementById("race-wrapper");
+    let wrapperDiv = document.getElementById("team-wrapper");
     let titleDiv = document.createElement("div");
     titleDiv.classList.add("title-bar-hidden");
     
