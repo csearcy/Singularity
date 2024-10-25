@@ -127,7 +127,7 @@ function LoadGrids(rosterData) {
 }
 
 function SetRoleDiv(members, role) {
-    let wrapperDiv = document.getElementById("race-wrapper");
+    let wrapperDiv = document.getElementById("leadership-wrapper");
     let titleDiv = document.createElement("div");
     titleDiv.classList.add("title-bar");
 
