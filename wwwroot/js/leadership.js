@@ -7,7 +7,7 @@ const Roles = {
 	SecondaryRaider: 40
 }
 
-const RAID_EXPANSION_ID = 503; // On new expansion release, run Journal Expansions Index API (https://develop.battle.net/documentation/world-of-warcraft/game-data-apis) to get new expansion ID number.
+const RAID_EXPANSION_ID = 514; // On new expansion release, run Journal Expansions Index API (https://develop.battle.net/documentation/world-of-warcraft/game-data-apis) to get new expansion ID number.
 const RAID_DIFFICULTY_MODE = "Heroic";
 const SECONDARY_NAME_SLUG = "hphelion";
 const RAIDERS_PER_ROW = 3;
