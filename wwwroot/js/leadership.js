@@ -129,10 +129,10 @@ function LoadGrids(rosterData) {
 function SetRoleDiv(members, role) {
     let wrapperDiv = document.getElementById("race-wrapper");
     let titleDiv = document.createElement("div");
-    titleDiv.classList.add("title-bar-team");
-    
-    let header = document.createElement("h2");
-    header.classList.add("team");
+    titleDiv.classList.add("title-bar");
+
+    let header = document.createElement("h1");
+    header.classList.add("title-text2");
     var title = GetTitle(role);
     header.innerHTML = title;
     titleDiv.appendChild(header);
@@ -173,7 +173,7 @@ function SetRoleDiv(members, role) {
 
 function GetTitle(role) {
     if(role === "leader") {
-        return "Guild Leader";
+        return "Leader";
     }
     
     if(role === "officer") {
