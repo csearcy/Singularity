@@ -14,10 +14,9 @@ body {
     background-color: #121212;
     display: flex;
     align-items: center;
-    top: 0px;
+    top: 15px;
     Height: 70px;
     width: 100%;
-    border-top: 1px solid black;
 }
 
 .logo-div {
