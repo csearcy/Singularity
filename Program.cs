@@ -1,7 +1,23 @@
+using Singularity.Models;
+using Singularity.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.Configure<BlizzardApiOptions>(
+    builder.Configuration.GetSection("BlizzardAPI")
+);
+
+builder.Services.Configure<GuildSettings>(
+    builder.Configuration.GetSection("Guild")
+);
+
+builder.Services.Configure<List<Raid>>(
+    builder.Configuration.GetSection("Raids")
+);
+
+builder.Services.AddHttpClient<BlizzardApiService>();
 
 var app = builder.Build();
 
@@ -22,4 +38,11 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapGet("/api/wowdata", async (BlizzardApiService blizzardApiService, string endpoint) =>
+{
+    var data = await blizzardApiService.GetWowDataAsync(endpoint);
+    return Results.Json(data);
+});
+
 app.Run();
+
