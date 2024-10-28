@@ -1,5 +1,6 @@
 using Singularity.Models;
 using Singularity.Services;
+using Singularity.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,15 +10,9 @@ builder.Services.Configure<BlizzardApiOptions>(
     builder.Configuration.GetSection("BlizzardAPI")
 );
 
-builder.Services.Configure<GuildSettings>(
-    builder.Configuration.GetSection("Guild")
-);
-
-builder.Services.Configure<List<Raid>>(
-    builder.Configuration.GetSection("Raids")
-);
-
-builder.Services.AddHttpClient<BlizzardApiService>();
+builder.Services.AddHttpClient<IBlizzardDataService, BlizzardDataService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IBlizzardDataService, BlizzardDataService>();
 
 var app = builder.Build();
 
@@ -29,6 +24,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
+    await blizzardDataService.GetMembersDataAsync();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -37,12 +38,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
-app.MapGet("/api/wowdata", async (BlizzardApiService blizzardApiService, string endpoint) =>
-{
-    var data = await blizzardApiService.GetWowDataAsync(endpoint);
-    return Results.Json(data);
-});
 
 app.Run();
 
