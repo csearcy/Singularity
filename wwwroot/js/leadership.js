@@ -65,8 +65,11 @@ function GenerateAccessToken() {
 
 function GetMembersData(nameSlug) {
     return $.ajax({
-        url: "https://us.api.blizzard.com/data/wow/guild/" + REALM_SLUG + "/"  + nameSlug +"/roster?namespace=profile-us&locale=en_US&access_token=" + accessToken,
-        type: "GET"
+        url: "https://us.api.blizzard.com/data/wow/guild/" + REALM_SLUG + "/"  + nameSlug +"/roster?namespace=profile-us&locale=en_US",
+        type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     });
 }
 
@@ -87,8 +90,11 @@ function GetMythicKeystoneSeasonsIndex(membersData, retries) {
 
 function GetMythicKeystoneSeasonsIndexData() {
     return $.ajax({
-        url: "https://us.api.blizzard.com/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US&access_token=" + accessToken,
-        type: "GET"
+        url: "https://us.api.blizzard.com/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US",
+        type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     })
 }
 
@@ -212,8 +218,11 @@ function GetMediaData(member, avatarImageId, retries) {
 function GetCharacterMediaSummaryData(member) {
     let memberName = member.character.name.toLowerCase();
     return $.ajax({
-        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + memberName + "/character-media?namespace=profile-us&locale=en_US&access_token=" + accessToken,
-        type: "GET"
+        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + memberName + "/character-media?namespace=profile-us&locale=en_US",
+        type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     });
 }
 
@@ -314,15 +323,21 @@ function GetEncounterData(member, characterProfileSummaryData, retries) {
 
 function GetCharacterProfileSummaryData(member) {
     return $.ajax({
-        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + member.character.name.toLowerCase() + "?namespace=profile-us&locale=en_US&access_token=" + accessToken,
-        type: "GET"
+        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + member.character.name.toLowerCase() + "?namespace=profile-us&locale=en_US",
+        type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     }); 
 }
 
 function GetCharacterEncounterData(member) {
     return $.ajax({
-        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + member.character.name.toLowerCase() + "/encounters/raids?namespace=profile-us&locale=en_US&access_token=" + accessToken,
-        type: "GET"
+        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + member.character.name.toLowerCase() + "/encounters/raids?namespace=profile-us&locale=en_US",
+        type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     }); 
 }
 
@@ -371,7 +386,10 @@ function SetCharacterProfileCells(profileData, memberName, raidProgress, retries
 
 function GetCharacterMythicKeystoneSeasonData(memberName) {
     return $.ajax({
-        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + memberName.toLowerCase() + "/mythic-keystone-profile/season/" + seasonId + "?namespace=profile-us&locale=en_US&access_token=" + accessToken,
+        url: "https://us.api.blizzard.com/profile/wow/character/" + REALM_SLUG + "/" + memberName.toLowerCase() + "/mythic-keystone-profile/season/" + seasonId + "?namespace=profile-us&locale=en_US",
         type: "GET",
+        headers: {
+            "Authorization": "Bearer " + accessToken
+        }
     });
 }
