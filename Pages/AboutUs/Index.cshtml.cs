@@ -16,8 +16,8 @@ namespace Singularity.Pages.AboutUs
 
         public async Task OnGet()
         {
-            var membersData = await _blizzardDataService.GetMembersDataAsync();
-            ViewData["MembersData"] = membersData;
+            var membersData = await _blizzardDataService.GetRosterDataAsync();
+            ViewData["RosterData"] = membersData;
         }
     }
 }

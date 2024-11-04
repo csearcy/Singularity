@@ -1,9 +1,11 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Caching.Memory;
 using Singularity.Models;
+using Singularity.Models.BlizzardApiModels;
 using IdentityModel.Client;
 using Singularity.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace Singularity.Services
 {
@@ -12,14 +14,29 @@ namespace Singularity.Services
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
         private readonly SemaphoreSlim _cacheLock = new(1, 1);
-        private readonly BlizzardApiOptions _options;
+        private readonly string BaseUrl;
+        private readonly string RealmSlug;
+        private readonly string GuildNameSlug;
+        private readonly string? TokenEndpoint;
+        private readonly string? ClientId;
+
+        private readonly string? ClientSecret;
+
         private string? _accessToken;
+
 
         public BlizzardDataService(HttpClient httpClient, IMemoryCache cache, IOptions<BlizzardApiOptions> options)
         {
             _httpClient = httpClient;
             _cache = cache;
-            _options = options.Value;
+
+            var blizzardOptions = options.Value;
+            BaseUrl = blizzardOptions.BaseUrl;
+            RealmSlug = blizzardOptions.Guild.Realm;
+            GuildNameSlug = blizzardOptions.Guild.Name;
+            TokenEndpoint = blizzardOptions.TokenEndpoint;
+            ClientId = blizzardOptions.ClientId;
+            ClientSecret = blizzardOptions.ClientSecret;
         }
 
         public async Task<string> GetAccessTokenAsync()
@@ -32,9 +49,9 @@ namespace Singularity.Services
             var client = new HttpClient();
             var tokenRequest = new ClientCredentialsTokenRequest
             {
-                Address = _options.TokenEndpoint,
-                ClientId = _options.ClientId,
-                ClientSecret = _options.ClientSecret,
+                Address = TokenEndpoint,
+                ClientId = ClientId,
+                ClientSecret = ClientSecret,
             };
 
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(tokenRequest);
@@ -44,15 +61,20 @@ namespace Singularity.Services
             return _accessToken;
         }
 
-        public async Task<string> GetMembersDataAsync()
+        public async Task<Roster> GetRosterDataAsync()
         {
-            var realmSlug = _options.Guild.Realm;
-            var guildNameSlug = _options.Guild.Name;
-            var baseUrl = _options.BaseUrl;
+            var endpoint = $"{BaseUrl}/data/wow/guild/{RealmSlug}/{GuildNameSlug}/roster?namespace=profile-us&locale=en_US";
+            var json = await GetCachedDataAsync($"RostersData", endpoint);
 
-            var endpoint = $"{baseUrl}/data/wow/guild/{realmSlug}/{guildNameSlug}/roster?namespace=profile-us&locale=en_US";
-            return await GetCachedDataAsync($"MembersData", endpoint);
+            return JsonSerializer.Deserialize<Roster>(json);
         }
+
+        public async Task<string> GetMythicKeystoneSeasonsIndexDataAsync() {
+            var endpoint = $"{BaseUrl}/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US";
+            return await GetCachedDataAsync($"MythicKeystoneSeasonsIndexData", endpoint);
+        }
+
+
 
         public async Task<string> GetWowDataAsync(string endpoint)
         {
@@ -67,9 +89,9 @@ namespace Singularity.Services
 
         public async Task<string> GetCachedDataAsync(string endpointKey, string apiEndpoint)
         {
-            if (_cache.TryGetValue(endpointKey, out string cachedData))
+            if (_cache.TryGetValue(endpointKey, out string? cachedData))
             {
-                return cachedData;
+                return cachedData ?? string.Empty;
             }
 
             await _cacheLock.WaitAsync();

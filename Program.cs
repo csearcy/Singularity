@@ -27,7 +27,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
-    await blizzardDataService.GetMembersDataAsync();
+    await blizzardDataService.GetRosterDataAsync();
 }
 
 app.UseHttpsRedirection();
