@@ -22,30 +22,19 @@ $(document).ready(function() {
 });
 
 function LoadPage(retries) {
-    GenerateAccessToken()
-    .done(function (accessTokenData) {
-        accessToken = accessTokenData.access_token;
-        GetMembersDataForLoad(RETRIES);
-    })
-    .fail(function(xhr, textStatus, errorThrown ) {
-        if (retries > 0) {
-            setTimeout(LoadPage(retries-1), 1000);
-            return;
-        }
-        return;
-    });
+    const appDataFromStorage = JSON.parse(localStorage.getItem('appData'));
+
+    if (appDataFromStorage && appDataFromStorage.rosterData) {
+        GetMembersDataForLoad();
+    }
 }
 
-function GetMembersDataForLoad(retries) {
+function GetMembersDataForLoad() {
     GetMembersData(NAME_SLUG)
     .done(function(membersData) {
         GetMythicKeystoneSeasonsIndex(membersData, RETRIES);
     })
     .fail(function(xhr, textStatus, errorThrown ) {
-        if (retries > 0) {
-            setTimeout(GetMembersDataForLoad(retries-1), 1000);
-            return;
-        }
         return;
     });
 }

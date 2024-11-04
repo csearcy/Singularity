@@ -1,23 +1,22 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Singularity.Models.BlizzardApiModels;
 using Singularity.Services.Interfaces;
 
 namespace Singularity.Pages.AboutUs
 {
-    public class IndexModel : PageModel
+    public class IndexModel : BasePageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IBlizzardDataService _blizzardDataService;        
-        
-        public IndexModel(ILogger<IndexModel> logger, IBlizzardDataService blizzardDataService)
+        public IndexModel(ILogger<IndexModel> logger, IBlizzardDataService blizzardDataService) : base(blizzardDataService)
         {
             _logger = logger;
-            _blizzardDataService = blizzardDataService;
         }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var membersData = await _blizzardDataService.GetRosterDataAsync();
-            ViewData["RosterData"] = membersData;
+            await LoadCommonDataAsync();
+            return Page();
         }
     }
 }

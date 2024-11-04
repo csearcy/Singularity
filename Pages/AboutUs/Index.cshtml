@@ -30,3 +30,10 @@ At Singularity, we believe that every member brings unique strengths to the tabl
 Join us as we embark on an epic journey through dungeons and raids, forging our legacy one boss at a time. Together, we will achieve greatness and leave our mark on the game. Welcome to Singularity  </h1>    
     </div>
 </div>
+
+<script>
+    window.appData = {
+        rosterData: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RosterData)),
+    };
+    localStorage.setItem('appData', JSON.stringify(window.appData));
+</script>
