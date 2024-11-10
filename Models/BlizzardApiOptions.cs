@@ -1,3 +1,5 @@
+using Singularity.Models.BlizzardApiModels;
+
 namespace Singularity.Models {
     public class BlizzardApiOptions
     {

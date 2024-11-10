@@ -4,10 +4,9 @@ namespace Singularity.Services.Interfaces
 {
     public interface IBlizzardDataService
     {
-        Task<string> GetAccessTokenAsync();
+        Task GetAccessTokenAsync();
         Task<Roster> GetRosterDataAsync();
-        Task<string> GetWowDataAsync(string endpoint);
-        Task<string> GetCachedDataAsync(string endpointKey, string apiEndpoint);
-        Task<string> GetMythicKeystoneSeasonsIndexDataAsync();
+        Task<T> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall);
+        Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync();
     }
 }

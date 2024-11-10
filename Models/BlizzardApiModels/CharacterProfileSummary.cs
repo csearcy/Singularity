@@ -1,6 +1,6 @@
 namespace Singularity.Models.BlizzardApiModels
  {
-    public class Raid
+    public class CharacterProfileSummary
     {
         public bool IsCurrent { get; set; } = default!;
         public string RaiderIoApiName { get; set; } = default!;

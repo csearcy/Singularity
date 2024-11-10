@@ -5,7 +5,6 @@ using Singularity.Models.BlizzardApiModels;
 using IdentityModel.Client;
 using Singularity.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
 
 namespace Singularity.Services
 {
@@ -14,21 +13,22 @@ namespace Singularity.Services
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
         private readonly SemaphoreSlim _cacheLock = new(1, 1);
+        private readonly IBlizzardApi _blizzardApi;
+
         private readonly string BaseUrl;
         private readonly string RealmSlug;
         private readonly string GuildNameSlug;
         private readonly string? TokenEndpoint;
         private readonly string? ClientId;
-
         private readonly string? ClientSecret;
-
         private string? _accessToken;
 
 
-        public BlizzardDataService(HttpClient httpClient, IMemoryCache cache, IOptions<BlizzardApiOptions> options)
+        public BlizzardDataService(HttpClient httpClient, IMemoryCache cache, IOptions<BlizzardApiOptions> options, IBlizzardApi blizzardApi)
         {
             _httpClient = httpClient;
             _cache = cache;
+            _blizzardApi = blizzardApi;
 
             var blizzardOptions = options.Value;
             BaseUrl = blizzardOptions.BaseUrl;
@@ -39,11 +39,11 @@ namespace Singularity.Services
             ClientSecret = blizzardOptions.ClientSecret;
         }
 
-        public async Task<string> GetAccessTokenAsync()
+        public async Task GetAccessTokenAsync()
         {
             if (!string.IsNullOrEmpty(_accessToken))
             {
-                return _accessToken;
+                return;
             }
 
             var client = new HttpClient();
@@ -58,67 +58,59 @@ namespace Singularity.Services
             if (tokenResponse.IsError) throw new Exception("Failed to retrieve access token");
 
             _accessToken = tokenResponse.AccessToken;
-            return _accessToken;
         }
 
         public async Task<Roster> GetRosterDataAsync()
         {
-            var endpoint = $"{BaseUrl}/data/wow/guild/{RealmSlug}/{GuildNameSlug}/roster?namespace=profile-us&locale=en_US";
-            var json = await GetCachedDataAsync($"RostersData", endpoint);
-
-            return JsonSerializer.Deserialize<Roster>(json);
+            await GetAccessTokenAsync();
+            return await GetCachedDataAsync("RostersData", 
+                () => _blizzardApi.GetRoster(RealmSlug, GuildNameSlug, $"Bearer {_accessToken}"));
         }
 
-        public async Task<string> GetMythicKeystoneSeasonsIndexDataAsync() {
-            var endpoint = $"{BaseUrl}/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US";
-            return await GetCachedDataAsync($"MythicKeystoneSeasonsIndexData", endpoint);
+        public async Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync() {
+            await GetAccessTokenAsync();
+            return await GetCachedDataAsync("MythicKeystoneSeasonsIndexData", 
+                () => _blizzardApi.GetMythicKeystoneSeasonIndex($"Bearer {_accessToken}"));
         }
 
-
-
-        public async Task<string> GetWowDataAsync(string endpoint)
+        public async Task<T> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall)
         {
-            var token = await GetAccessTokenAsync();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.GetAsync($"https://us.api.blizzard.com{endpoint}");
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> GetCachedDataAsync(string endpointKey, string apiEndpoint)
-        {
-            if (_cache.TryGetValue(endpointKey, out string? cachedData))
+            if (_cache.TryGetValue(endpointKey, out var cachedData))
             {
-                return cachedData ?? string.Empty;
+                return (T)cachedData;
             }
 
             await _cacheLock.WaitAsync();
             try
             {
-                if (!_cache.TryGetValue(endpointKey, out cachedData))
+                if (_cache.TryGetValue(endpointKey, out cachedData))
                 {
-                    var token = await GetAccessTokenAsync();
-                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                    var response = await _httpClient.GetAsync(apiEndpoint);
-                    response.EnsureSuccessStatusCode();
-                    cachedData = await response.Content.ReadAsStringAsync();
-
-                    var cacheEntryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
-                    };
-                    _cache.Set(endpointKey, cachedData, cacheEntryOptions);
+                    return (T)cachedData;
                 }
+                
+                var response = await apiCall();
+                if (response is HttpResponseMessage httpResponse)
+                {
+                    httpResponse.EnsureSuccessStatusCode();
+                    cachedData = await httpResponse.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    cachedData = response;
+                }
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                };
+                _cache.Set(endpointKey, cachedData, cacheEntryOptions);
             }
             finally
             {
                 _cacheLock.Release();
             }
 
-            return cachedData;
+            return (T)cachedData;
         }
     }
 }
