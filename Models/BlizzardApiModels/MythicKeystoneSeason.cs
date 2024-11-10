@@ -2,10 +2,10 @@ namespace Singularity.Models.BlizzardApiModels
  {
     public class MythicKeystoneSeason
     {
-        public bool IsCurrent { get; set; } = default!;
-        public string RaiderIoApiName { get; set; } = default!;
-        public string BlizzardApiName { get; set; } = default!;
-        public string ImageAbbreviation { get; set; } = default!;
+        public Season Season { get; set; } = default!;
+        public List<Run> BestRuns { get; set; } = default!;
+        public Character Character { get; set; } = default!;
+        public RatingInfo MythicRating { get; set; } = default!;
     }
 }
 

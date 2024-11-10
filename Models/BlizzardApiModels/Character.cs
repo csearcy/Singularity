@@ -8,11 +8,11 @@ namespace Singularity.Models.BlizzardApiModels
 
         public string Name { get; set; } = default!;
 
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
 
-        public Faction Faction { get; set; }
+        public Faction? Faction { get; set; }
 
-        public Race Race { get; set; }
+        public Race? Race { get; set; }
 
         [JsonPropertyName("playable_race")]
         public Race? PlayableRace { get; set; }
@@ -26,9 +26,9 @@ namespace Singularity.Models.BlizzardApiModels
         [JsonPropertyName("active_spec")]
         public Specification Specification { get; set; }
 
-        public Realm Realm { get; set; }
+        public Realm? Realm { get; set; }
 
-        public Guild Guild { get; set; }
+        public Guild? Guild { get; set; }
 
         public int Level { get; set; }
 
@@ -44,10 +44,10 @@ namespace Singularity.Models.BlizzardApiModels
         public int EquippedItemLevel { get; set; }
 
         [JsonPropertyName("active_title")]
-        public Title ActiveTitle { get; set; }
+        public Title? ActiveTitle { get; set; }
 
         [JsonPropertyName("covenant_progress")]
-        public CovenentProgress CovenentProgress { get; set; }
+        public CovenentProgress? CovenentProgress { get; set; }
 
         [JsonPropertyName("name_search")]
         public string NameSearch { get; set; } = default!;
