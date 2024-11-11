@@ -10,6 +10,7 @@ builder.Services.Configure<BlizzardApiOptions>(
     builder.Configuration.GetSection("BlizzardAPI")
 );
 
+//put in base url setting
 builder.Services.AddRefitClient<IBlizzardApi>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://us.api.blizzard.com"));
 
@@ -28,8 +29,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
-    await blizzardDataService.GetRosterDataAsync();
-    await blizzardDataService.GetMythicKeystoneSeasonsIndexDataAsync();
+    //await blizzardDataService.GetAllApiData();
 }
 
 app.UseHttpsRedirection();

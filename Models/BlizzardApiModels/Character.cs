@@ -24,7 +24,7 @@ namespace Singularity.Models.BlizzardApiModels
         public Class? PlayableClass { get; set; }
 
         [JsonPropertyName("active_spec")]
-        public Specification Specification { get; set; }
+        public Specification ActiveSpec { get; set; }
 
         public Realm? Realm { get; set; }
 

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Singularity.Models.BlizzardApiModels
 {
@@ -11,5 +12,7 @@ namespace Singularity.Models.BlizzardApiModels
 
         [JsonPropertyName("equipped_item_level")]
         public int EqupippedItemLevel { get; set; }
+
+        public CharacterMedia Media { get; set; } = new CharacterMedia();
     }
 }
