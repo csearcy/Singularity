@@ -5,18 +5,18 @@ namespace Singularity.Models
     public class GuildViewModel {
         public Roster? Roster { get; set; }
         public MythicKeystoneSeasonIndex? MythicKeystoneSeasonIndex { get; set; }
-        public MythicKeystoneSeason? MythicKeystoneSeason { get; set; }
+        public List<MythicKeystoneSeason>? MythicKeystoneSeasons { get; set; }
         public List<CharacterMedia>? CharacterMedias { get; set; }
-        public List<CharacterProfileSummary>? CharacterProfileSummaries { get; set; }
+        public List<Character>? CharacterProfileSummaries { get; set; }
         public List<CharacterRaids>? CharacterRaids { get; set; }
 
         public enum Roles
         {
-            GuildLeader,
-            Officer,
-            RaidLeader,
-            Banker,
-            Raider
+            GuildLeader = 0,
+            Officer = 1,
+            RaidLeader = 3,
+            Banker = 4,
+            Raider = 6
         }
 
         public static readonly List<int> AcceptableRoles =

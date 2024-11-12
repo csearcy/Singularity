@@ -13,6 +13,9 @@ namespace Singularity.Pages {
         protected async Task LoadCommonDataAsync()
         {
             GuildSummary = await _blizzardDataService.GetAllApiData();
+            var test1 = (int)GuildViewModel.Roles.GuildLeader;
+
+            var test = GuildSummary.Roster.Members.Where(s => s.Rank == test1).ToList();
         }
     }
 }

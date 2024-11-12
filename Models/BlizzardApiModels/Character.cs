@@ -51,5 +51,30 @@ namespace Singularity.Models.BlizzardApiModels
 
         [JsonPropertyName("name_search")]
         public string NameSearch { get; set; } = default!;
+
+        public void UpdateProperties(Character newCharacter)
+        {
+            if (newCharacter == null) return;
+
+            if (newCharacter.Id != default) Id = newCharacter.Id;
+            if (!string.IsNullOrEmpty(newCharacter.Name)) Name = newCharacter.Name;
+            if (newCharacter.Gender != null) Gender = newCharacter.Gender;
+            if (newCharacter.Faction != null) Faction = newCharacter.Faction;
+            if (newCharacter.Race != null) Race = newCharacter.Race;
+            if (newCharacter.PlayableRace != null) PlayableRace = newCharacter.PlayableRace;
+            if (newCharacter.CharacterClass != null) CharacterClass = newCharacter.CharacterClass;
+            if (newCharacter.PlayableClass != null) PlayableClass = newCharacter.PlayableClass;
+            if (newCharacter.ActiveSpec != null) ActiveSpec = newCharacter.ActiveSpec;
+            if (newCharacter.Realm != null) Realm = newCharacter.Realm;
+            if (newCharacter.Guild != null) Guild = newCharacter.Guild;
+            if (newCharacter.Level != default) Level = newCharacter.Level;
+            if (newCharacter.Experience != default) Experience = newCharacter.Experience;
+            if (newCharacter.AchievementPoints != default) AchievementPoints = newCharacter.AchievementPoints;
+            if (newCharacter.AverageItemLevel != default) AverageItemLevel = newCharacter.AverageItemLevel;
+            if (newCharacter.EquippedItemLevel != default) EquippedItemLevel = newCharacter.EquippedItemLevel;
+            if (newCharacter.ActiveTitle != null) ActiveTitle = newCharacter.ActiveTitle;
+            if (newCharacter.CovenentProgress != null) CovenentProgress = newCharacter.CovenentProgress;
+            if (!string.IsNullOrEmpty(newCharacter.NameSearch)) NameSearch = newCharacter.NameSearch;
+        }
     }
 }

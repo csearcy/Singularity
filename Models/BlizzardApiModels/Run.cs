@@ -5,12 +5,14 @@ namespace Singularity.Models.BlizzardApiModels
     public class Run
     {
         [JsonPropertyName("completed_timestamp")]
-        public int CompletedTimestamp { get; set; } = default!;
+        public long CompletedTimestamp { get; set; } = default!;
 
         public int Duration { get; set; } = default!;
 
+        [JsonPropertyName("keystone_level")]
         public int KeystoneLevel { get; set; } = default!;
 
+        [JsonPropertyName("keystone_affixes")]
         public List<Affixes> KeystoneAffixes { get; set; } = default!;
 
         public List<Member> Members { get; set; } = default!;

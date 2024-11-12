@@ -11,8 +11,12 @@ namespace Singularity.Models.BlizzardApiModels
         public Race? Race { get; set; }
 
         [JsonPropertyName("equipped_item_level")]
-        public int EqupippedItemLevel { get; set; }
+        public int EquippedItemLevel { get; set; }
 
-        public CharacterMedia Media { get; set; } = new CharacterMedia();
+        [JsonIgnore]
+        public CharacterMedia Media { get; set; }
+
+        [JsonIgnore]
+        public MythicKeystoneSeason MythicKeystoneSeason { get; set; }
     }
 }

@@ -36,6 +36,12 @@ namespace Singularity.Services
 
         public async Task<GuildViewModel> GetAllApiData()
         {
+            var cacheKey = "GuildSummary";
+            if (_cache.TryGetValue(cacheKey, out GuildViewModel cachedData))
+            {
+                return cachedData;
+            }
+
             await GetAccessTokenAsync();
 
             var rosterTask = GetRosterDataAsync();
@@ -54,22 +60,24 @@ namespace Singularity.Services
                 return guildSummary;
             }
 
-            var fetchTasks = guildSummary.Roster.Members.Select(async member =>
+            guildSummary.CharacterMedias = await FetchCharacterMediaData(guildSummary);
+            guildSummary.MythicKeystoneSeasons = await FetchCharacterMythicKeystoneSeason(guildSummary);
+            guildSummary.CharacterProfileSummaries = await FetchCharacterProfileSummaries(guildSummary);
+            
+            var cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                member.Media = await FetchCharacterMediaData(member);
-                member.MythicKeystoneSeason = await FetchCharacterMythicKeystoneSeason(member, guildSummary.MythicKeystoneSeasonIndex.CurrentSeason.Id);
-                member.Character = await FetchCharacterProfileSummaries(member);
-            });
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            };
+            _cache.Set(cacheKey, guildSummary, cacheEntryOptions);
 
-            await Task.WhenAll(fetchTasks);
-
-            return guildSummary;
+            return guildSummary;;
         }
 
-        private async Task<CharacterMedia?> FetchCharacterMediaData(Member member)
+        private async Task<List<CharacterMedia?>> FetchCharacterMediaData(GuildViewModel guildSummary)
         {
-            return await FetchCharacterData(member, async characterName =>
+            return await FetchCharacterData(guildSummary, async characterName =>
             {
+                var member = guildSummary.Roster.Members.FirstOrDefault(m => m.Character.Name.ToLower() == characterName);
                 if (member == null || !GuildViewModel.AcceptableRoles.Contains(member.Rank))
                 {
                     return new CharacterMedia();
@@ -77,31 +85,36 @@ namespace Singularity.Services
 
                 var (data, statusCode) = await GetCachedDataAsync($"CharacterMediaData_{characterName}",
                     () => _blizzardApi.GetCharacterMedia(RealmSlug, characterName, $"Bearer {_accessToken}"));
+                member.Media = statusCode == HttpStatusCode.OK ? data : new CharacterMedia();
 
-                return statusCode == HttpStatusCode.OK ? data : member.Media;
+                return member.Media;
             });
         }
 
-        private async Task<MythicKeystoneSeason?> FetchCharacterMythicKeystoneSeason(Member member, int seasonId)
+        private async Task<List<MythicKeystoneSeason?>> FetchCharacterMythicKeystoneSeason(GuildViewModel guildSummary)
         {
-            return await FetchCharacterData(member, async characterName =>
+            return await FetchCharacterData(guildSummary, async characterName =>
             {
+                var member = guildSummary.Roster.Members.FirstOrDefault(m => m.Character.Name.ToLower() == characterName);
                 if (member == null || !GuildViewModel.AcceptableRoles.Contains(member.Rank))
                 {
                     return new MythicKeystoneSeason();
                 }
 
+                var seasonId = guildSummary.MythicKeystoneSeasonIndex.CurrentSeason.Id;
                 var (data, statusCode) = await GetCachedDataAsync($"CharacterMythicKeystoneSeasonData_{characterName}",
                     () => _blizzardApi.GetMythicKeystoneSeasonData(RealmSlug, characterName, seasonId, $"Bearer {_accessToken}"));
+                member.MythicKeystoneSeason = statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeason();
 
-                return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeason();
+                return member.MythicKeystoneSeason;
             });
         }
 
-        private async Task<Character?> FetchCharacterProfileSummaries(Member member)
+        private async Task<List<Character?>> FetchCharacterProfileSummaries(GuildViewModel guildSummary)
         {
-            return await FetchCharacterData(member, async characterName =>
+            return await FetchCharacterData(guildSummary, async characterName =>
             {
+                var member = guildSummary.Roster.Members.FirstOrDefault(m => m.Character.Name.ToLower() == characterName);
                 if (member == null)
                 {
                     return new Character();
@@ -117,37 +130,41 @@ namespace Singularity.Services
 
                 if (statusCode == HttpStatusCode.OK && data != null)
                 {
-                    data.UpdateProperties(member.Character);
+                    member.Character.UpdateProperties(data);
                 }
 
-                return statusCode == HttpStatusCode.OK ? data : new Character();
+                return member.Character;
             });
         }
 
-        private async Task<T?> FetchCharacterData<T>(Member member, Func<string, Task<T>> fetchDataFunc)
+        private async Task<List<T?>> FetchCharacterData<T>(GuildViewModel guildSummary, Func<string, Task<T>> fetchDataFunc)
         {
-            if (member?.Character?.Name == null)
+            var characterDataTasks = guildSummary.Roster.Members.Select(async member =>
             {
-                return default;
-            }
+                var characterName = member?.Character?.Name.ToLower();
+                if (string.IsNullOrEmpty(characterName))
+                {
+                    return default;
+                }
+                try
+                {
+                    var data = await fetchDataFunc(characterName);
+                    return data;
+                }
+                catch (Refit.ApiException apiEx) when (apiEx.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return default;
+                }
+                catch (Exception)
+                {
+                    return default;
+                }
+            });
 
-            var characterName = member.Character.Name.ToLower();
-            try
-            {
-                var data = await fetchDataFunc(characterName);
-                return data;
-            }
-            catch (Refit.ApiException apiEx) when (apiEx.StatusCode == HttpStatusCode.NotFound)
-            {
-                return default;
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+            return (await Task.WhenAll(characterDataTasks)).Where(result => result != null).ToList();
         }
 
-        private async Task GetAccessTokenAsync()
+        public async Task GetAccessTokenAsync()
         {
             if (!string.IsNullOrEmpty(_accessToken))
             {
@@ -168,7 +185,7 @@ namespace Singularity.Services
             _accessToken = tokenResponse.AccessToken;
         }
 
-        private async Task<Roster> GetRosterDataAsync()
+        public async Task<Roster> GetRosterDataAsync()
         {
             var (data, statusCode) = await GetCachedDataAsync("RostersData",
                 () => _blizzardApi.GetRoster(RealmSlug, GuildNameSlug, $"Bearer {_accessToken}"));
@@ -181,14 +198,14 @@ namespace Singularity.Services
             return statusCode == HttpStatusCode.OK ? data : new Roster();
         }
 
-        private async Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync()
+        public async Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync()
         {
             var (data, statusCode) = await GetCachedDataAsync("MythicKeystoneSeasonsIndexData",
                 () => _blizzardApi.GetMythicKeystoneSeasonIndex($"Bearer {_accessToken}"));
             return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeasonIndex();
         }
 
-        private async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
+        public async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
         {
             if (_cache.TryGetValue(endpointKey, out var cachedData))
             {
