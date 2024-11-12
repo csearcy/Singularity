@@ -14,7 +14,7 @@ namespace Singularity.Services.Interfaces {
         Task<CharacterMedia> GetCharacterMedia(string realmSlug, string characterName, [Header("Authorization")] string authorization);
 
         [Get("/profile/wow/character/{realmSlug}/{characterName}?namespace=profile-us&locale=en_US")]
-        Task<CharacterProfileSummary> GetCharacterProfileSummary(string realmSlug, string characterName, [Header("Authorization")] string authorization);
+        Task<Character> GetCharacterProfileSummary(string realmSlug, string characterName, [Header("Authorization")] string authorization);
 
         [Get("/profile/wow/character/{realmSlug}/{characterName}/encounters/raids?namespace=profile-us&locale=en_US")]
         Task<CharacterRaids> GetCharacterRaids(string realmSlug, string characterName, [Header("Authorization")] string authorization);

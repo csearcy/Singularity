@@ -4,6 +4,7 @@ using Singularity.Models.BlizzardApiModels;
 using IdentityModel.Client;
 using Singularity.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace Singularity.Services
 {
@@ -48,45 +49,105 @@ namespace Singularity.Services
                 MythicKeystoneSeasonIndex = await mythicKeystoneSeasonIndexTask
             };
 
-            guildSummary.CharacterMedias = await FetchCharacterMediaData(guildSummary);
+            if (guildSummary?.Roster?.Members == null)
+            {
+                return guildSummary;
+            }
+
+            var fetchTasks = guildSummary.Roster.Members.Select(async member =>
+            {
+                member.Media = await FetchCharacterMediaData(member);
+                member.MythicKeystoneSeason = await FetchCharacterMythicKeystoneSeason(member, guildSummary.MythicKeystoneSeasonIndex.CurrentSeason.Id);
+                member.Character = await FetchCharacterProfileSummaries(member);
+            });
+
+            await Task.WhenAll(fetchTasks);
+
             return guildSummary;
         }
 
-        private async Task<List<CharacterMedia?>> FetchCharacterMediaData(GuildViewModel guildSummary)
+        private async Task<CharacterMedia?> FetchCharacterMediaData(Member member)
         {
-            if(guildSummary?.Roster?.Members == null) {
-                return null;
-            }
-
-            var characterMediaTasks = guildSummary.Roster.Members.Select(async member =>
+            return await FetchCharacterData(member, async characterName =>
             {
-                var characterName = member?.Character?.Name.ToLower();
-                if (string.IsNullOrEmpty(characterName))
+                if (member == null || !GuildViewModel.AcceptableRoles.Contains(member.Rank))
                 {
-                    return null;
+                    return new CharacterMedia();
                 }
-                try
-                {
-                    member.Media = await GetCharacterMediaDataAsync(characterName);
-                    return member.Media;
-                }
-                catch (Refit.ApiException apiEx) when (apiEx.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    Console.WriteLine($"Character media for {characterName} not found (404).");
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error retrieving character media for {characterName}: {ex.Message}");
-                    return null;
-                }
-            });
 
-            var characterMediaResults = (await Task.WhenAll(characterMediaTasks)).Where(result => result != null).ToList();
-            return characterMediaResults;
+                var (data, statusCode) = await GetCachedDataAsync($"CharacterMediaData_{characterName}",
+                    () => _blizzardApi.GetCharacterMedia(RealmSlug, characterName, $"Bearer {_accessToken}"));
+
+                return statusCode == HttpStatusCode.OK ? data : member.Media;
+            });
         }
 
-        public async Task GetAccessTokenAsync()
+        private async Task<MythicKeystoneSeason?> FetchCharacterMythicKeystoneSeason(Member member, int seasonId)
+        {
+            return await FetchCharacterData(member, async characterName =>
+            {
+                if (member == null || !GuildViewModel.AcceptableRoles.Contains(member.Rank))
+                {
+                    return new MythicKeystoneSeason();
+                }
+
+                var (data, statusCode) = await GetCachedDataAsync($"CharacterMythicKeystoneSeasonData_{characterName}",
+                    () => _blizzardApi.GetMythicKeystoneSeasonData(RealmSlug, characterName, seasonId, $"Bearer {_accessToken}"));
+
+                return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeason();
+            });
+        }
+
+        private async Task<Character?> FetchCharacterProfileSummaries(Member member)
+        {
+            return await FetchCharacterData(member, async characterName =>
+            {
+                if (member == null)
+                {
+                    return new Character();
+                }
+
+                if (!GuildViewModel.AcceptableRoles.Contains(member.Rank))
+                {
+                    return member.Character;
+                }
+
+                var (data, statusCode) = await GetCachedDataAsync($"CharacterProfileSummaryData_{characterName}",
+                    () => _blizzardApi.GetCharacterProfileSummary(RealmSlug, characterName, $"Bearer {_accessToken}"));
+
+                if (statusCode == HttpStatusCode.OK && data != null)
+                {
+                    data.UpdateProperties(member.Character);
+                }
+
+                return statusCode == HttpStatusCode.OK ? data : new Character();
+            });
+        }
+
+        private async Task<T?> FetchCharacterData<T>(Member member, Func<string, Task<T>> fetchDataFunc)
+        {
+            if (member?.Character?.Name == null)
+            {
+                return default;
+            }
+
+            var characterName = member.Character.Name.ToLower();
+            try
+            {
+                var data = await fetchDataFunc(characterName);
+                return data;
+            }
+            catch (Refit.ApiException apiEx) when (apiEx.StatusCode == HttpStatusCode.NotFound)
+            {
+                return default;
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+        }
+
+        private async Task GetAccessTokenAsync()
         {
             if (!string.IsNullOrEmpty(_accessToken))
             {
@@ -107,56 +168,67 @@ namespace Singularity.Services
             _accessToken = tokenResponse.AccessToken;
         }
 
-        public async Task<Roster> GetRosterDataAsync()
+        private async Task<Roster> GetRosterDataAsync()
         {
-            return await GetCachedDataAsync("RostersData", 
+            var (data, statusCode) = await GetCachedDataAsync("RostersData",
                 () => _blizzardApi.GetRoster(RealmSlug, GuildNameSlug, $"Bearer {_accessToken}"));
+
+            if (statusCode == HttpStatusCode.OK && data != null)
+            {
+                data.Members = data.Members?.Where(member => GuildViewModel.AcceptableRoles.Contains(member.Rank)).ToList();
+            }
+
+            return statusCode == HttpStatusCode.OK ? data : new Roster();
         }
-        
-        public async Task<CharacterMedia> GetCharacterMediaDataAsync(string characterName)
+
+        private async Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync()
         {
-            return await GetCachedDataAsync("CharacterMediaData", 
-                () => _blizzardApi.GetCharacterMedia(RealmSlug, characterName, $"Bearer {_accessToken}"));
-        }
-
-        public async Task<MythicKeystoneSeasonIndex> GetMythicKeystoneSeasonsIndexDataAsync() {
-            return await GetCachedDataAsync("MythicKeystoneSeasonsIndexData", 
+            var (data, statusCode) = await GetCachedDataAsync("MythicKeystoneSeasonsIndexData",
                 () => _blizzardApi.GetMythicKeystoneSeasonIndex($"Bearer {_accessToken}"));
+            return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeasonIndex();
         }
 
-        public async Task<T> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall)
+        private async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
         {
             if (_cache.TryGetValue(endpointKey, out var cachedData))
             {
-                return (T)cachedData;
+                return ((T)cachedData, HttpStatusCode.OK);
             }
 
             await _cacheLock.WaitAsync();
             try
             {
                 var response = await apiCall();
-                if (response is HttpResponseMessage httpResponse)
+                HttpStatusCode statusCode = HttpStatusCode.OK;
+
+                if (response == null)
                 {
-                    httpResponse.EnsureSuccessStatusCode();
-                    cachedData = await httpResponse.Content.ReadAsStringAsync();
+                    statusCode = HttpStatusCode.NotFound;
+                    return (new T(), statusCode);
                 }
-                else
-                {
-                    cachedData = response;
-                }
+
+                cachedData = response;
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
                 };
                 _cache.Set(endpointKey, cachedData, cacheEntryOptions);
+
+                return ((T)cachedData, statusCode);
+            }
+            catch (Refit.ApiException apiEx) when (apiEx.StatusCode == HttpStatusCode.NotFound)
+            {
+                return (new T(), HttpStatusCode.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return (new T(), HttpStatusCode.InternalServerError);
             }
             finally
             {
                 _cacheLock.Release();
             }
-
-            return (T)cachedData;
         }
     }
 }
