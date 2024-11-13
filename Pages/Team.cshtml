@@ -1,18 +1,75 @@
 ﻿@page
+@using Microsoft.Extensions.Caching.Memory
+@using Singularity.Models
+@using Singularity.Pages.AboutUs;
+
+@inject IMemoryCache _cache
+
 @model IndexModel
-@{
-    ViewData["Title"] = "Raid Team";
-}
 
 <div class='title-bar'>
         <div class='title-name'>
         <h1 class='title-text'>Raid Team</h1>
     </div>    
 </div>
-<div id='raidcontent'>
+@if (Model.GuildSummary != null)
+{
+    <div id='raidcontent' class='show-footer3'>
     <div id="team-wrapper">
-        <div class='raid-title-bar'>
-        </div>        
-    </div>  
+        <div class='raid-title-bar'></div> 
+        @if (Model.GuildSummary.Roster != null && Model.GuildSummary.Roster.Members != null)
+        {
+            @foreach(var member in Model.GuildSummary.Roster.Members.OrderBy(s => s.Rank))
+            {
+                var characterName = member.Character.Name;
+                <div class="title-bar-hidden">
+                    <h2 class="hidden">Guild Leader</h2>
+                </div>
+                <div class="team-div">
+                    <div class="portrait">
+                        <img class="player-portrait" id="avatar-image-leader1" src="@member.Media.AvatarUrl"/>
+                    </div>
+                    <div class="player-overlay"></div>
+                    <div class="player-info">
+                        <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
+                            <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
+                        </div>
+                        <table class="rosterbg" id="character-table-@characterName">
+                            <tbody>
+                                <tr>
+                                    <td class="rosterinfotitle">Class:</td>
+                                    <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
+                                    <td class="rosterinfotitle">Spec:</td>
+                                    <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
+                                    <td class="rosterinfotitle">Mythic+:</td>
+                                    <td class="rosterinfo">@member.MythicRating</td>
+                                </tr>
+                                <tr>
+                                    <td class="rosterinfotitle">Race:</td>
+                                    <td class="rosterinfo">@member.Character?.Race?.Name</td>
+                                    <td class="rosterinfotitle">Faction:</td>
+                                    <td class="rosterinfo">@member.Character?.Faction?.Name</td>
+                                    <td class="rosterinfotitle">Raid:</td>
+                                    <td class="rosterinfo">@member.RaidProgress</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        } else
+        {
+            <p>Member data unavailable...</p>
+        }       
+    </div> 
 </div> 
-<script src="~/js/team.js"></script>
+}
+else
+{
+    <p>Data unavailable...</p>
+}
+
+
+
+
+

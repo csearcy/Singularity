@@ -1,16 +1,35 @@
+using Refit;
+using Singularity.Models;
+using Singularity.Services;
+using Singularity.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.Configure<BlizzardApiOptions>(
+    builder.Configuration.GetSection("BlizzardAPI")
+);
+
+//put in base url setting
+builder.Services.AddRefitClient<IBlizzardApi>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://us.api.blizzard.com"));
+
+builder.Services.AddHttpClient<IBlizzardDataService, BlizzardDataService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IBlizzardDataService, BlizzardDataService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
+    //await blizzardDataService.GetAllApiData();
 }
 
 app.UseHttpsRedirection();

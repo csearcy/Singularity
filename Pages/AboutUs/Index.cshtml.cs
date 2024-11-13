@@ -1,18 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Singularity.Models;
+using Singularity.Services.Interfaces;
 
-namespace Singularity.Pages
+namespace Singularity.Pages.AboutUs
 {
-    public class IndexModel : PageModel
+    public class IndexModel(ILogger<IndexModel> logger, IBlizzardDataService blizzardDataService) : BasePageModel(blizzardDataService)
     {
-        private readonly ILogger<IndexModel> _logger;
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+        private readonly ILogger<IndexModel> _logger = logger;
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            await LoadCommonDataAsync();
+            return Page();
         }
     }
 }
