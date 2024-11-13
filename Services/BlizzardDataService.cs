@@ -19,6 +19,9 @@ namespace Singularity.Services
         private readonly string? TokenEndpoint;
         private readonly string? ClientId;
         private readonly string? ClientSecret;
+        private readonly string? CurrentExpansion;
+        private readonly string? RaidDifficulty;
+        public readonly List<Raid> Raids;
         private string? _accessToken;
 
         public BlizzardDataService(IMemoryCache cache, IOptions<BlizzardApiOptions> options, IBlizzardApi blizzardApi)
@@ -32,6 +35,9 @@ namespace Singularity.Services
             TokenEndpoint = blizzardOptions.TokenEndpoint;
             ClientId = blizzardOptions.ClientId;
             ClientSecret = blizzardOptions.ClientSecret;
+            CurrentExpansion = blizzardOptions.CurrentExpansion;
+            Raids = blizzardOptions.Raids;
+            RaidDifficulty = blizzardOptions.RaidDifficulty;
         }
 
         public async Task<GuildViewModel> GetAllApiData()
@@ -48,11 +54,10 @@ namespace Singularity.Services
             var mythicKeystoneSeasonIndexTask = GetMythicKeystoneSeasonsIndexDataAsync();
 
             await Task.WhenAll(rosterTask, mythicKeystoneSeasonIndexTask);
-
             var guildSummary = new GuildViewModel
             {
                 Roster = await rosterTask,
-                MythicKeystoneSeasonIndex = await mythicKeystoneSeasonIndexTask
+                MythicKeystoneSeasonIndex = await mythicKeystoneSeasonIndexTask,
             };
 
             if (guildSummary?.Roster?.Members == null)
@@ -60,17 +65,19 @@ namespace Singularity.Services
                 return guildSummary;
             }
 
-            guildSummary.CharacterMedias = await FetchCharacterMediaData(guildSummary);
-            guildSummary.MythicKeystoneSeasons = await FetchCharacterMythicKeystoneSeason(guildSummary);
-            guildSummary.CharacterProfileSummaries = await FetchCharacterProfileSummaries(guildSummary);
-            
+            await GetJournalExpansionDataAsync(guildSummary);
+            await FetchCharacterMediaData(guildSummary);
+            await FetchCharacterMythicKeystoneSeason(guildSummary);
+            await FetchCharacterProfileSummaries(guildSummary);
+            await FetchCharacterRaidData(guildSummary);
+
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
             _cache.Set(cacheKey, guildSummary, cacheEntryOptions);
 
-            return guildSummary;;
+            return guildSummary;
         }
 
         private async Task<List<CharacterMedia?>> FetchCharacterMediaData(GuildViewModel guildSummary)
@@ -83,10 +90,11 @@ namespace Singularity.Services
                     return new CharacterMedia();
                 }
 
+                var realmSlug = member?.Character?.Realm?.Slug ?? RealmSlug;
                 var (data, statusCode) = await GetCachedDataAsync($"CharacterMediaData_{characterName}",
-                    () => _blizzardApi.GetCharacterMedia(RealmSlug, characterName, $"Bearer {_accessToken}"));
-                member.Media = statusCode == HttpStatusCode.OK ? data : new CharacterMedia();
+                    () => _blizzardApi.GetCharacterMedia(realmSlug, characterName, $"Bearer {_accessToken}"));
 
+                member.Media = statusCode == HttpStatusCode.OK ? data : new CharacterMedia();
                 return member.Media;
             });
         }
@@ -102,10 +110,19 @@ namespace Singularity.Services
                 }
 
                 var seasonId = guildSummary.MythicKeystoneSeasonIndex.CurrentSeason.Id;
+                var realmSlug = member?.Character?.Realm?.Slug ?? RealmSlug;
                 var (data, statusCode) = await GetCachedDataAsync($"CharacterMythicKeystoneSeasonData_{characterName}",
-                    () => _blizzardApi.GetMythicKeystoneSeasonData(RealmSlug, characterName, seasonId, $"Bearer {_accessToken}"));
-                member.MythicKeystoneSeason = statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeason();
+                    () => _blizzardApi.GetMythicKeystoneSeasonData(realmSlug, characterName, seasonId, $"Bearer {_accessToken}"));
 
+                if(statusCode == HttpStatusCode.OK && data != null)
+                {
+                    member.MythicKeystoneSeason = data;
+                    member.MythicRating = member.MythicKeystoneSeason?.MythicRating?.Rating == null ? "N/A" : Math.Round(member.MythicKeystoneSeason.MythicRating.Rating).ToString();
+                    return member.MythicKeystoneSeason;
+                }
+
+                member.MythicKeystoneSeason = new MythicKeystoneSeason();
+                member.MythicRating = "N/A";
                 return member.MythicKeystoneSeason;
             });
         }
@@ -124,16 +141,63 @@ namespace Singularity.Services
                 {
                     return member.Character;
                 }
-
+                
+                var realmSlug = member?.Character?.Realm?.Slug ?? RealmSlug;
                 var (data, statusCode) = await GetCachedDataAsync($"CharacterProfileSummaryData_{characterName}",
-                    () => _blizzardApi.GetCharacterProfileSummary(RealmSlug, characterName, $"Bearer {_accessToken}"));
+                    () => _blizzardApi.GetCharacterProfileSummary(realmSlug, characterName, $"Bearer {_accessToken}"));
 
                 if (statusCode == HttpStatusCode.OK && data != null)
                 {
                     member.Character.UpdateProperties(data);
+                    member.EquippedItemLevel = data.EquippedItemLevel;
                 }
 
                 return member.Character;
+            });
+        }
+
+        private async Task<List<CharacterRaid?>> FetchCharacterRaidData(GuildViewModel guildSummary)
+        {
+            return await FetchCharacterData(guildSummary, async characterName =>
+            {
+                var member = guildSummary.Roster.Members.FirstOrDefault(m => m.Character.Name.ToLower() == characterName);
+                if (member == null)
+                {
+                    return new CharacterRaid();
+                }
+
+                if (!GuildViewModel.AcceptableRoles.Contains(member.Rank))
+                {
+                    return member.Raid;
+                }
+
+                var realmSlug = member?.Character?.Realm?.Slug ?? RealmSlug;
+                var (data, statusCode) = await GetCachedDataAsync($"CharacterRaidData_{characterName}",
+                    () => _blizzardApi.GetCharacterRaids(realmSlug, characterName, $"Bearer {_accessToken}"));
+
+                if(statusCode == HttpStatusCode.OK && data != null)
+                {
+                    var expansions = data.Expansions.FirstOrDefault(s => s.Expansion.Id == guildSummary.CurrentExpansionId);
+                    var currentRaidName = Raids.FirstOrDefault(r => r.IsCurrent)?.BlizzardApiName;
+                    var instance = expansions?.Instances.FirstOrDefault(i => i.Instance?.Name == currentRaidName)?.Modes
+                        .FirstOrDefault(m => m.Difficulty.Name == RaidDifficulty);
+
+                    var raidProgress = "N/A";
+                    if (instance != null && instance.Progress != null)
+                    {
+                        var completed = instance.Progress.CompletedCount;
+                        var total = instance.Progress.TotalCount;
+                        raidProgress = $"{completed}/{total} {RaidDifficulty[..1].ToUpper()}";
+                    }
+
+                    member.Raid = data;
+                    member.RaidProgress = raidProgress;
+                    return member.Raid;
+                }
+
+                member.Raid = new CharacterRaid();
+                member.RaidProgress = "N/A";
+                return member.Raid;
             });
         }
 
@@ -203,6 +267,18 @@ namespace Singularity.Services
             var (data, statusCode) = await GetCachedDataAsync("MythicKeystoneSeasonsIndexData",
                 () => _blizzardApi.GetMythicKeystoneSeasonIndex($"Bearer {_accessToken}"));
             return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeasonIndex();
+        }
+
+        public async Task<JournalExpansion> GetJournalExpansionDataAsync(GuildViewModel guildSummary)
+        {
+            var (data, statusCode) = await GetCachedDataAsync("JournalExpansionData",
+                () => _blizzardApi.GetJournalExpansionData($"Bearer {_accessToken}"));
+
+            if (statusCode == HttpStatusCode.OK && data != null) {
+                guildSummary.CurrentExpansionId = data.Tiers.FirstOrDefault(e => e.Name == CurrentExpansion)?.Id ?? 0;
+                return data;
+            }
+            return new JournalExpansion();
         }
 
         public async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()

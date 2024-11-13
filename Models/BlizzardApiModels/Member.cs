@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Singularity.Models.BlizzardApiModels
 {
@@ -13,10 +12,18 @@ namespace Singularity.Models.BlizzardApiModels
         [JsonPropertyName("equipped_item_level")]
         public int EquippedItemLevel { get; set; }
 
+        public string? MythicRating { get; set; }
+        public string? RaidProgress { get; set; }
+
         [JsonIgnore]
         public CharacterMedia Media { get; set; }
 
         [JsonIgnore]
         public MythicKeystoneSeason MythicKeystoneSeason { get; set; }
+
+        [JsonIgnore]
+        public CharacterRaid Raid { get; set; }
+
+
     }
 }

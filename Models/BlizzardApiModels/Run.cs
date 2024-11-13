@@ -22,8 +22,10 @@ namespace Singularity.Models.BlizzardApiModels
         [JsonPropertyName("is_completed_within_time")]
         public bool IsCompletedWithinTime { get; set; } = default!;
 
+        [JsonPropertyName("mythic_rating")]
         public RatingInfo MythicRating { get; set; } = default!;
 
+        [JsonPropertyName("map_rating")]
         public RatingInfo MapRating { get; set; } = default!;
     }
 }

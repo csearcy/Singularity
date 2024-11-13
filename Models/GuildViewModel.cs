@@ -8,7 +8,8 @@ namespace Singularity.Models
         public List<MythicKeystoneSeason>? MythicKeystoneSeasons { get; set; }
         public List<CharacterMedia>? CharacterMedias { get; set; }
         public List<Character>? CharacterProfileSummaries { get; set; }
-        public List<CharacterRaids>? CharacterRaids { get; set; }
+        public List<CharacterRaid>? CharacterRaids { get; set; }
+        public int CurrentExpansionId { get; set; }
 
         public enum Roles
         {
