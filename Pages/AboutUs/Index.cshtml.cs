@@ -8,10 +8,9 @@ namespace Singularity.Pages.AboutUs
     {
         private readonly ILogger<IndexModel> _logger = logger;
 
-        public async Task<IActionResult> OnGetAsync()
+        public void OnGet()
         {
-            await LoadCommonDataAsync();
-            return Page();
+            _ = LoadCommonDataAsync();
         }
     }
 }

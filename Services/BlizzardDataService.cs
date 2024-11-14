@@ -13,7 +13,7 @@ namespace Singularity.Services
         private readonly IMemoryCache _cache;
         private readonly SemaphoreSlim _cacheLock = new(1, 1);
         private readonly IBlizzardApi _blizzardApi;
-
+        private static bool _dataIsReady = false;
         private readonly string RealmSlug;
         private readonly string GuildNameSlug;
         private readonly string? TokenEndpoint;
@@ -38,6 +38,11 @@ namespace Singularity.Services
             CurrentExpansion = blizzardOptions.CurrentExpansion;
             Raids = blizzardOptions.Raids;
             RaidDifficulty = blizzardOptions.RaidDifficulty;
+        }
+
+        public Task<bool> GetDataStatusAsync()
+        {
+            return Task.FromResult(_dataIsReady);
         }
 
         public async Task<GuildViewModel> GetAllApiData()
@@ -77,6 +82,7 @@ namespace Singularity.Services
             };
             _cache.Set(cacheKey, guildSummary, cacheEntryOptions);
 
+            _dataIsReady = true;
             return guildSummary;
         }
 

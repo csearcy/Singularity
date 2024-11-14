@@ -254,6 +254,22 @@ body {
     display: block;
 }
 
+.data-loading {
+    text-decoration: none;
+    letter-spacing: 2px;
+    color: #ffffff;
+    font-family: 'Orbitron';
+    text-shadow:
+      0 0 1px #4be4b3,
+      0 0 3px #4be4b3,
+      0 0 7px #4be4b3,
+      0 0 12px #4be4b3,
+      0 0 17px #4be4b3;
+    font-size: 1.8em;
+    line-height: 55px;
+    text-align: center;
+  }
+
 /* Footer Content layout*/
 .checkusout-wrapper {
     margin: auto;
