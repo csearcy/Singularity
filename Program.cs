@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Refit;
 using Singularity.Models;
 using Singularity.Services;
@@ -5,14 +6,18 @@ using Singularity.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers(); 
 builder.Services.AddRazorPages();
 builder.Services.Configure<BlizzardApiOptions>(
     builder.Configuration.GetSection("BlizzardAPI")
 );
 
-//put in base url setting
 builder.Services.AddRefitClient<IBlizzardApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://us.api.blizzard.com"));
+    .ConfigureHttpClient((serviceProvider, client) =>
+    {
+        var options = serviceProvider.GetRequiredService<IOptions<BlizzardApiOptions>>().Value;
+        client.BaseAddress = new Uri(options.BaseUrl);
+    });
 
 builder.Services.AddHttpClient<IBlizzardDataService, BlizzardDataService>();
 builder.Services.AddMemoryCache();
@@ -29,7 +34,6 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
-    //await blizzardDataService.GetAllApiData();
 }
 
 app.UseHttpsRedirection();
@@ -40,5 +44,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

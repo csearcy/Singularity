@@ -7,5 +7,6 @@ namespace Singularity.Services.Interfaces
     public interface IBlizzardDataService
     {
         Task<GuildViewModel> GetAllApiData();
+        Task<bool> GetDataStatusAsync();
     }
 }
