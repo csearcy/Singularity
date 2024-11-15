@@ -22,17 +22,23 @@
     
     function checkDataReady() {
         if (typeof requiresData !== 'undefined' && requiresData && !dataIsReady) {
-            $.ajax({
+            $('body').addClass('loading-cursor');
+           $.ajax({
                 url: '/api/data/status',
                 method: 'GET',
                 success: function(response) {
                     if (response.isReady) {
                         dataIsReady = true;
-                        $('#main-content').load(window.location.href + ' #main-content');
+                        $('#main-content').load(window.location.href + ' #main-content', function() {
+                            $('.data-loading-overlay').remove();
+                            $('body').removeClass('loading-cursor');
+                        });
                     } else {
-                        $('#main-content').html('<p class="data-loading">Data is loading, please wait...</p>');
                         setTimeout(checkDataReady, 3000);
                     }
+                },
+                error: function() {
+                    $('body').removeClass('loading-cursor');
                 }
             });
         }

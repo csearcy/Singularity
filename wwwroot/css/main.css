@@ -8,6 +8,10 @@ body {
     display: none;
 }
 
+.loading-cursor {
+    cursor: wait;
+}
+
 /* Top Logo Bar CSS */
 .logo-bar {
     Position: relative;
@@ -270,6 +274,19 @@ body {
     text-align: center;
   }
 
+.data-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+  
 /* Footer Content layout*/
 .checkusout-wrapper {
     margin: auto;
