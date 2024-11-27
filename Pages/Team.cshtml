@@ -28,37 +28,7 @@
             @foreach(var member in Model.GuildSummary.Roster.Members.OrderBy(s => s.Rank))
             {
                 var characterName = member.Character.Name;
-                <div class="team-div">
-                    <div class="portrait">
-                        <img class="player-portrait" id="avatar-image-leader1" src="@member.Media.AvatarUrl"/>
-                    </div>
-                    <div class="player-overlay"></div>
-                    <div class="player-info">
-                        <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
-                            <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
-                        </div>
-                        <table class="rosterbg" id="character-table-@characterName">
-                            <tbody>
-                                <tr>
-                                    <td class="rosterinfotitle">Class:</td>
-                                    <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
-                                    <td class="rosterinfotitle">Spec:</td>
-                                    <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
-                                    <td class="rosterinfotitle">Mythic+:</td>
-                                    <td class="rosterinfo">@member.MythicRating</td>
-                                </tr>
-                                <tr>
-                                    <td class="rosterinfotitle">Race:</td>
-                                    <td class="rosterinfo">@member.Character?.Race?.Name</td>
-                                    <td class="rosterinfotitle">Faction:</td>
-                                    <td class="rosterinfo">@member.Character?.Faction?.Name</td>
-                                    <td class="rosterinfotitle">Raid:</td>
-                                    <td class="rosterinfo">@member.RaidProgress</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                @Html.Partial("_MemberDetails", member)
             }
         } else
         {
@@ -71,8 +41,3 @@ else
     @Html.Partial("_DataLoading")
 }
 </div> 
-
-
-
-
-
