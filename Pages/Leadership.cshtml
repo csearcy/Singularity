@@ -1,14 +1,190 @@
 @page
+@using Microsoft.Extensions.Caching.Memory
+@using Singularity.Models
 @using Singularity.Pages.AboutUs;
 
+@inject IMemoryCache _cache
+
 @model IndexModel
-@{
-    ViewData["Title"] = "Leadership";
+
+@section Scripts {
+    <script>
+        var requiresData = true;
+    </script>
+}
+ <div class='show-footer3'></div>
+@if (Model.GuildSummary != null)
+{
+    @if (Model.GuildSummary.Roster != null && Model.GuildSummary.Roster.Members != null)
+    {
+        <div class='title-bar'>
+            <div class='title-name'>
+                <h1 class='title-text'>Guild Leader</h1>
+            </div>    
+        </div>
+        @foreach(var member in Model.GuildSummary.Roster.Members.Where(s => s.Rank == (int)GuildViewModel.Roles.GuildLeader))
+        {
+            var characterName = member.Character.Name;
+            <div class="team-div">
+                <div class="portrait"><img class="player-portrait"
+                    src="@member.Media.AvatarUrl">
+                </div>
+                <div class="player-overlay"></div>
+                <div class="player-info">
+                    <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
+                        <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
+                    </div>
+                    <table class="rosterbg" id="character-table-@characterName">
+                        <tbody>
+                            <tr>
+                                <td class="rosterinfotitle">Class:</td>
+                                <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
+                                <td class="rosterinfotitle">Spec:</td>
+                                <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
+                                <td class="rosterinfotitle">Mythic+:</td>
+                                <td class="rosterinfo">@member.MythicRating</td>
+                            </tr>
+                            <tr>
+                                <td class="rosterinfotitle">Race:</td>
+                                <td class="rosterinfo">@member.Character?.Race?.Name</td>
+                                <td class="rosterinfotitle">Faction:</td>
+                                <td class="rosterinfo">@member.Character?.Faction?.Name</td>
+                                <td class="rosterinfotitle">Raid:</td>
+                                <td class="rosterinfo">@member.RaidProgress</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        <div class='title-bar'>
+            <div class='title-name'>
+                <h1 class='title-text'>Officers</h1>
+            </div>    
+        </div>
+        @foreach(var member in Model.GuildSummary.Roster.Members.Where(s => s.Rank == (int)GuildViewModel.Roles.Officer))
+        {
+            var characterName = member.Character.Name;
+            <div class="team-div">
+                <div class="portrait"><img class="player-portrait"
+                    src="@member.Media.AvatarUrl">
+                </div>
+                <div class="player-overlay"></div>
+                <div class="player-info">
+                    <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
+                        <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
+                    </div>
+                    <table class="rosterbg" id="character-table-@characterName">
+                        <tbody>
+                            <tr>
+                                <td class="rosterinfotitle">Class:</td>
+                                <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
+                                <td class="rosterinfotitle">Spec:</td>
+                                <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
+                                <td class="rosterinfotitle">Mythic+:</td>
+                                <td class="rosterinfo">@member.MythicRating</td>
+                            </tr>
+                            <tr>
+                                <td class="rosterinfotitle">Race:</td>
+                                <td class="rosterinfo">@member.Character?.Race?.Name</td>
+                                <td class="rosterinfotitle">Faction:</td>
+                                <td class="rosterinfo">@member.Character?.Faction?.Name</td>
+                                <td class="rosterinfotitle">Raid:</td>
+                                <td class="rosterinfo">@member.RaidProgress</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        <div class='title-bar'>
+            <div class='title-name'>
+                <h1 class='title-text'>Raid Leaders</h1>
+            </div>    
+        </div>
+        @foreach(var member in Model.GuildSummary.Roster.Members.Where(s => s.Rank == (int)GuildViewModel.Roles.RaidLeader))
+        {
+            var characterName = member.Character.Name;
+            <div class="team-div">
+                <div class="portrait"><img class="player-portrait"
+                    src="@member.Media.AvatarUrl">
+                </div>
+                <div class="player-overlay"></div>
+                <div class="player-info">
+                    <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
+                        <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
+                    </div>
+                    <table class="rosterbg" id="character-table-@characterName">
+                        <tbody>
+                            <tr>
+                                <td class="rosterinfotitle">Class:</td>
+                                <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
+                                <td class="rosterinfotitle">Spec:</td>
+                                <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
+                                <td class="rosterinfotitle">Mythic+:</td>
+                                <td class="rosterinfo">@member.MythicRating</td>
+                            </tr>
+                            <tr>
+                                <td class="rosterinfotitle">Race:</td>
+                                <td class="rosterinfo">@member.Character?.Race?.Name</td>
+                                <td class="rosterinfotitle">Faction:</td>
+                                <td class="rosterinfo">@member.Character?.Faction?.Name</td>
+                                <td class="rosterinfotitle">Raid:</td>
+                                <td class="rosterinfo">@member.RaidProgress</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        <div class='title-bar'>
+            <div class='title-name'>
+                <h1 class='title-text'>Treasurer</h1>
+            </div>    
+        </div>
+        {
+            var member = Model.GuildSummary.Roster.Members.FirstOrDefault(s => s.Rank == (int)GuildViewModel.Roles.Banker);
+            var characterName = member.Character.Name;
+            <div class="team-div">
+                <div class="portrait"><img class="player-portrait"
+                    src="@member.Media.AvatarUrl">
+                </div>
+                <div class="player-overlay"></div>
+                <div class="player-info">
+                    <div id="member-name-div-@characterName" class="rostername @member.Character?.CharacterClass?.Name.Replace(" ", "-")">@characterName
+                        <h16 class="text">&nbsp;&nbsp;&nbsp;(@member.EquippedItemLevel)</h16>
+                    </div>
+                    <table class="rosterbg" id="character-table-@characterName">
+                        <tbody>
+                            <tr>
+                                <td class="rosterinfotitle">Class:</td>
+                                <td class="rosterinfo">@member.Character?.CharacterClass?.Name</td>
+                                <td class="rosterinfotitle">Spec:</td>
+                                <td class="rosterinfo">@member.Character?.ActiveSpec?.Name</td>
+                                <td class="rosterinfotitle">Mythic+:</td>
+                                <td class="rosterinfo">@member.MythicRating</td>
+                            </tr>
+                            <tr>
+                                <td class="rosterinfotitle">Race:</td>
+                                <td class="rosterinfo">@member.Character?.Race?.Name</td>
+                                <td class="rosterinfotitle">Faction:</td>
+                                <td class="rosterinfo">@member.Character?.Faction?.Name</td>
+                                <td class="rosterinfotitle">Raid:</td>
+                                <td class="rosterinfo">@member.RaidProgress</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        @Html.Partial("_DataLoading")
+    }
+}
+else
+{
+    @Html.Partial("_DataLoading")
 }
 
-<div id='leadership'>
-<script type="text/javascript" src="/javascript/leadership.js"></script>
-            <div id="leadership-wrapper">
-            </div>  
-</div>        
-<script src="~/js/leadership.js"></script>
