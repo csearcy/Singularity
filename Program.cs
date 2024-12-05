@@ -20,6 +20,10 @@ builder.Services.Configure<BlizzardApiOptions>(
     builder.Configuration.GetSection("BlizzardAPI")
 );
 
+builder.Services.Configure<RaiderIoApiOptions>(
+    builder.Configuration.GetSection("RaiderIoAPI")
+);
+
 builder.Services.AddRefitClient<IBlizzardApi>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
@@ -27,9 +31,18 @@ builder.Services.AddRefitClient<IBlizzardApi>()
         client.BaseAddress = new Uri(options.BaseUrl);
     });
 
+builder.Services.AddRefitClient<IRaiderIoApi>()
+    .ConfigureHttpClient((serviceProvider, client) =>
+    {
+        var options = serviceProvider.GetRequiredService<IOptions<RaiderIoApiOptions>>().Value;
+        client.BaseAddress = new Uri(options.BaseUrl);
+    });
+
 builder.Services.AddHttpClient<IBlizzardDataService, BlizzardDataService>();
+builder.Services.AddHttpClient<IRaiderIoDataService, RaiderIoDataService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IBlizzardDataService, BlizzardDataService>();
+builder.Services.AddScoped<IRaiderIoDataService, RaiderIoDataService>();
 
 var app = builder.Build();
 
@@ -42,6 +55,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
+    var raiderIoService = scope.ServiceProvider.GetRequiredService<IRaiderIoDataService>();  
 }
 
 app.UseHttpsRedirection();

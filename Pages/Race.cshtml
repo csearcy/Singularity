@@ -1,0 +1,86 @@
+@page
+@using Microsoft.Extensions.Caching.Memory
+@using Singularity.Models
+@using Singularity.Pages.AboutUs;
+
+@inject IMemoryCache _cache
+
+@model IndexModel
+
+@section Scripts {
+    <script>
+        var requiresData = true;
+    </script>
+}
+
+@if (Model.GuildSummary != null)
+{
+    @if (Model.GuildSummary.Roster != null && Model.GuildSummary.Roster.Members != null)
+    {
+        <div id="racecontent">
+            <div class="race-wrapper">
+                <div class="title-bar-main">
+                    <div class="title-main">
+                        <h2 class="title">Race to Realm 2nd</h2>
+                    </div>
+                <div class="raidracemenu">
+                    <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select" aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
+                                <option value="nerubar-palace">Nerub'ar Palace</option>
+                                <option value="amirdrassil-the-dreams-hope">Amirdrassil, the Dream's Hope</option>
+                                <option value="aberrus-the-shadowed-crucible">Aberrus, the Shadowed Crucible</option>
+                                <option value="vault-of-the-incarnates">Vault of the Incarnates</option>
+                    </select>
+                </div>    
+                </div>
+                <div id="race-div" class="race-div">
+                <div id="race-over-all" class="raceoveralltable"><div id="guild-info-Handicap Hangtime" class="guildinfo"><table id="guild-info-table-Handicap Hangtime" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">1</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Handicap Hangtime</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Ministry of Defense" class="guildinfo"><table id="guild-info-table-Ministry of Defense" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">2</td><td class="faction-cell-horde"></td><td class="guildinfotable">Ministry of Defense</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Embyr" class="guildinfo"><table id="guild-info-table-Embyr" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">3</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Embyr</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Counterparts" class="guildinfo"><table id="guild-info-table-Counterparts" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">4</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Counterparts</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Project Failsauce" class="guildinfo"><table id="guild-info-table-Project Failsauce" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">5</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Project Failsauce</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Edamame Enterprise" class="guildinfo"><table id="guild-info-table-Edamame Enterprise" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">6</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Edamame Enterprise</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Aphelion" class="guildinfo"><table id="guild-info-table-Aphelion" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">7</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Aphelion</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-The Gentlemen" class="guildinfo"><table id="guild-info-table-The Gentlemen" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">8</td><td class="faction-cell-alliance"></td><td class="guildinfotable">The Gentlemen</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Uniqueness To Go" class="guildinfo"><table id="guild-info-table-Uniqueness To Go" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">9</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Uniqueness To Go</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div><div id="guild-info-Bacon N Kegs" class="guildinfo"><table id="guild-info-table-Bacon N Kegs" class="guildinfotable"><tbody><tr><td class="guildinfotablerank">10</td><td class="faction-cell-alliance"></td><td class="guildinfotable">Bacon N Kegs</td><td class="guildinfotabledata">8/8</td></tr></tbody></table></div></div></div>
+            </div>  
+            <div id="boss-tables-id" class="boss-tables-class">
+                <div class="race-wrapper boss" id="boss-ulgrax-the-devourer">
+                    <div id="boss-name-ulgrax-the-devourer" class="title-bar-race">
+                        <h2 class="team">Ulgrax the Devourer</h2>
+                    </div>
+                    <div class="bossoveralltable">
+                        <div class="guildinfo-2">
+                            <table id="boss-table-0-ulgrax-the-devourer" class="guildinfoboss">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossinfotablerank">1</td>
+                                        <td class="faction-cell-alliance"></td>
+                                        <td class="bossinfotablename">The Gentlemen</td>
+                                        <td class="bossinfotablebestpull">DEFEATED</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="guildinfo-2">
+                            <table id="boss-table-1-ulgrax-the-devourer" class="guildinfoboss">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossinfotablerank">2</td>
+                                        <td class="faction-cell-alliance"></td>
+                                        <td class="bossinfotablename">Counterparts</td>
+                                        <td class="bossinfotablebestpull">DEFEATED</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @* repeat for top five teams less behind the curve *@
+                        <div class="boss-image">
+                            <img id="nerubar-boss-image-0" src="https://render.worldofwarcraft.com/us/npcs/zoom/creature-display-117772.jpg">
+                        </div>
+                    </div>
+                    <div class="wrapper-footer"></div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.Partial("_DataLoading")
+    }
+}
+else
+{
+    @Html.Partial("_DataLoading")
+}
