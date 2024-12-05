@@ -17,7 +17,7 @@ namespace Singularity.Services
         private readonly string RaidDifficulty;
         public readonly List<Raid> Raids;
         private static bool _dataIsReady = false;
-        
+
         public RaiderIoDataService(IMemoryCache cache, IOptions<RaiderIoApiOptions> options, IRaiderIoApi raiderIoApi)
         {
             _cache = cache;
@@ -42,43 +42,49 @@ namespace Singularity.Services
                 return cachedData;
             }
 
-            var raidRankingsTask = GetRaidRankingsAsync();
-
-            var raceSummary = new RaceViewModel {
-                RaidRankings = await raidRankingsTask
-            };
+            var raceViewModel = new RaceViewModel();
+            await GetRaidRankingsAsync(raceViewModel);
+            await GetBossRankingsAsync(raceViewModel);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
-            _cache.Set(cacheKey, raceSummary, cacheEntryOptions);
+            _cache.Set(cacheKey, raceViewModel, cacheEntryOptions);
 
             _dataIsReady = true;
-            return raceSummary;
-        }        
-
-        public async Task<List<Ranking>> GetRaidRankingsAsync()
-        {
-            try
-            {
-                var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
-                    () => _raiderIoApi.GetRaidRankings(Raids.First(s => s.IsCurrent).RaiderIoApiName, RaidDifficulty, RealmSlug));
-
-                if (statusCode == HttpStatusCode.OK && data != null)
-                {
-                    return data;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }            
-
-            return new List<Ranking>();
+            return raceViewModel;
         }
-       
-        public async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
+
+        private async Task<RaidRanking> GetRaidRankingsAsync(RaceViewModel raceViewModel)
+        {
+            var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
+                    () => _raiderIoApi.GetRaidRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, RealmSlug));
+
+            if (statusCode == HttpStatusCode.OK && data != null)
+            {
+                raceViewModel.RaidRankings = data;
+                return data;
+            }
+            
+            return new RaidRanking();
+        }
+
+        private async Task<BossRanking> GetBossRankingsAsync(RaceViewModel raceViewModel)
+        {
+            var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
+                    () => _raiderIoApi.GetBossRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, "", RealmSlug));
+
+            if (statusCode == HttpStatusCode.OK && data != null)
+            {
+                raceViewModel.BossRankings = data;
+                return data;
+            }
+            
+            return new BossRanking();
+        }
+
+        private async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
         {
             if (_cache.TryGetValue(endpointKey, out var cachedData))
             {
