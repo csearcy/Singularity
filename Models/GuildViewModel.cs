@@ -9,6 +9,8 @@ namespace Singularity.Models
         public List<CharacterMedia>? CharacterMedias { get; set; }
         public List<Character>? CharacterProfileSummaries { get; set; }
         public List<CharacterRaid>? CharacterRaids { get; set; }
+        public int? CurrentRaidInstanceId { get; set; }
+        public List<Boss>? Bosses { get; set; }
         public int CurrentExpansionId { get; set; }
 
         public enum Roles

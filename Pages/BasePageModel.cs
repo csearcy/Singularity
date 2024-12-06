@@ -14,7 +14,7 @@ namespace Singularity.Pages {
         protected async Task LoadCommonDataAsync()
         {
             GuildSummary = await _blizzardDataService.GetAllApiData();
-            RaceSummary = await _raiderIoDataService.GetAllApiData();
+            RaceSummary = await _raiderIoDataService.GetAllApiData(GuildSummary.Bosses);
         }
     }
 }

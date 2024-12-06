@@ -57,12 +57,15 @@ namespace Singularity.Services
 
             var rosterTask = GetRosterDataAsync();
             var mythicKeystoneSeasonIndexTask = GetMythicKeystoneSeasonsIndexDataAsync();
+            var currentRaidName = Raids.First(s => s.IsCurrent).BlizzardApiName;
+            var journalSeasonIndexTask = GetJournalSeasonIndexDataAsync();
 
-            await Task.WhenAll(rosterTask, mythicKeystoneSeasonIndexTask);
+            await Task.WhenAll(rosterTask, mythicKeystoneSeasonIndexTask, journalSeasonIndexTask);
             var guildSummary = new GuildViewModel
             {
                 Roster = await rosterTask,
                 MythicKeystoneSeasonIndex = await mythicKeystoneSeasonIndexTask,
+                CurrentRaidInstanceId = journalSeasonIndexTask.Result.Instances.FirstOrDefault(s => s.Name == currentRaidName)?.Id
             };
 
             if (guildSummary?.Roster?.Members == null)
@@ -70,12 +73,16 @@ namespace Singularity.Services
                 return guildSummary;
             }
 
-            await GetJournalExpansionDataAsync(guildSummary);
-            await FetchCharacterMediaData(guildSummary);
-            await FetchCharacterMythicKeystoneSeason(guildSummary);
-            await FetchCharacterProfileSummaries(guildSummary);
-            await FetchCharacterRaidData(guildSummary);
+            var journalExpansionTask = GetJournalExpansionDataAsync(guildSummary);
+            var characterMediaTask = FetchCharacterMediaData(guildSummary);
+            var characterMythicKeystoneSeasonTask =  FetchCharacterMythicKeystoneSeason(guildSummary);
+            var characterProfileSummariesTask =  FetchCharacterProfileSummaries(guildSummary);
+            var characterRaidTask =  FetchCharacterRaidData(guildSummary);
+            var journalInstanceTask = GetJournalInstance(guildSummary.CurrentRaidInstanceId);
 
+            await Task.WhenAll(journalExpansionTask, characterMediaTask, characterMythicKeystoneSeasonTask, characterProfileSummariesTask, characterRaidTask, journalInstanceTask);
+            await GetBosses(guildSummary, journalInstanceTask.Result.Encounters);
+            
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
@@ -275,6 +282,13 @@ namespace Singularity.Services
             return statusCode == HttpStatusCode.OK ? data : new MythicKeystoneSeasonIndex();
         }
 
+        public async Task<JournalSeasonIndex> GetJournalSeasonIndexDataAsync()
+        {
+            var (data, statusCode) = await GetCachedDataAsync($"InstanceIdData",
+                () => _blizzardApi.GetJournalSeasonIndex($"Bearer {_accessToken}"));
+            return statusCode == HttpStatusCode.OK ? data : new JournalSeasonIndex();
+        }
+
         public async Task<JournalExpansion> GetJournalExpansionDataAsync(GuildViewModel guildSummary)
         {
             var (data, statusCode) = await GetCachedDataAsync("JournalExpansionData",
@@ -285,6 +299,100 @@ namespace Singularity.Services
                 return data;
             }
             return new JournalExpansion();
+        }
+
+        public async Task<JournalInstance> GetJournalInstance(int? instanceId)
+        {
+            if(instanceId == null)
+            {
+                return new JournalInstance();
+            }
+
+            var (data, statusCode) = await GetCachedDataAsync($"JournalExpansionData_{instanceId}",
+                () => _blizzardApi.GetJournalInstance(instanceId.ToString(), $"Bearer {_accessToken}"));
+
+            if (statusCode == HttpStatusCode.OK && data != null) {
+                return data;
+            }
+            return new JournalInstance();
+        }        
+
+        public async Task<List<Boss>> GetBosses(GuildViewModel guildSummary, IEnumerable<Encounter> encounters)
+        {
+            var bosses = new List<Boss>();
+            if(encounters == null || !encounters.Any())
+            {
+                return bosses;
+            }
+
+            foreach(var encounter in encounters)
+            {
+                var boss = new Boss
+                {
+                    Id = encounter.Id,
+                    Name = encounter.Name,
+                    Slug = GenerateSlug(encounter.Name)
+                };
+                
+                var journalEncounterData = await GetJournalEncounter(encounter.Id);
+                if (journalEncounterData == null)
+                {
+                    bosses.Add(boss);
+                    continue;
+                }
+
+                var creatureDisplayId = journalEncounterData?.Creatures?.FirstOrDefault()?.CreatureDisplay.Id;
+                if (creatureDisplayId == null) 
+                {
+                    bosses.Add(boss);
+                    continue;
+                }
+
+                boss.CreatureDisplayId = creatureDisplayId;
+                var creatureMediaData = await GetCreatureMedia(creatureDisplayId);                
+                if (creatureMediaData?.Assets == null || !creatureMediaData.Assets.Any())
+                {
+                    bosses.Add(boss);
+                    continue;
+                }
+
+                boss.ImageUrl = creatureMediaData.Assets.First().Value;
+                bosses.Add(boss);
+            }
+
+            guildSummary.Bosses = bosses;
+            return bosses;
+        }
+
+        public async Task<JournalEncounter?> GetJournalEncounter(int encounterId)
+        {
+            var (data, statusCode) = await GetCachedDataAsync($"JournalEncounterData_{encounterId}",
+                () => _blizzardApi.GetJournalEncounter(encounterId.ToString(), $"Bearer {_accessToken}"));
+
+            if (statusCode == HttpStatusCode.OK && data != null)
+            {
+                return data;
+            }
+
+            return null;
+        }        
+
+        public async Task<CreatureDisplayMedia?> GetCreatureMedia(int? creatureDisplayId)
+        {
+            if (creatureDisplayId == null)
+            {
+                return null;
+            }
+
+            var (data, statusCode) = await GetCachedDataAsync($"CreatureMediaData_{creatureDisplayId}",
+                () => _blizzardApi.GetCreatureDisplayMedia(creatureDisplayId.ToString(), $"Bearer {_accessToken}"));
+
+            if (statusCode == HttpStatusCode.OK && data != null)
+            {
+                return data;
+            }
+
+            return null;
         }
 
         public async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()
@@ -328,6 +436,15 @@ namespace Singularity.Services
             {
                 _cacheLock.Release();
             }
+        }        
+
+        private static string GenerateSlug(string name)
+        {
+            return name.ToLower()
+                       .Replace(",", "")
+                       .Replace("-", "")
+                       .Replace(" ", "-")
+                       .Replace("'", "");
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Singularity.Services
             return Task.FromResult(_dataIsReady);
         }
 
-        public async Task<RaceViewModel> GetAllApiData()
+        public async Task<RaceViewModel> GetAllApiData(List<Boss> bosses)
         {
             var cacheKey = "RaceSummary";
             if (_cache.TryGetValue(cacheKey, out RaceViewModel cachedData))
@@ -44,7 +44,7 @@ namespace Singularity.Services
 
             var raceViewModel = new RaceViewModel();
             await GetRaidRankingsAsync(raceViewModel);
-            await GetBossRankingsAsync(raceViewModel);
+            //await GetBossRankingsAsync(raceViewModel, bosses);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
@@ -70,18 +70,20 @@ namespace Singularity.Services
             return new RaidRanking();
         }
 
-        private async Task<BossRanking> GetBossRankingsAsync(RaceViewModel raceViewModel)
+        private async Task<BossRanking> GetBossRankingsAsync(RaceViewModel raceViewModel, IEnumerable<string> bossNames)
         {
-            var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
-                    () => _raiderIoApi.GetBossRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, "", RealmSlug));
-
-            if (statusCode == HttpStatusCode.OK && data != null)
+            foreach (var bossName in bossNames)
             {
-                raceViewModel.BossRankings = data;
-                return data;
-            }
+                var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
+                    () => _raiderIoApi.GetBossRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, bossName, RealmSlug));
+
+                if (statusCode == HttpStatusCode.OK && data != null && data.bossRankings.Any())
+                {                    
+                    raceViewModel.BossRankings.bossRankings.Add(data.bossRankings.First());                    
+                }
+            }            
             
-            return new BossRanking();
+            return raceViewModel.BossRankings;
         }
 
         private async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()

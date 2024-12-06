@@ -4,7 +4,7 @@ namespace Singularity.Services.Interfaces
 {
     public interface IRaiderIoDataService
     {
-        Task<RaceViewModel> GetAllApiData();
+        Task<RaceViewModel> GetAllApiData(List<Boss> bossName);
         Task<bool> GetDataStatusAsync();
     }
 }
