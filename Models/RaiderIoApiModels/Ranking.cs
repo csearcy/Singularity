@@ -12,6 +12,6 @@ namespace Singularity.Models.RaiderIoApiModels
         public bool? DoesVideoExist { get; set; }
 
         [JsonPropertyName("itemLevelAvg")]
-        public int? ItemLevelAverage { get; set; }
+        public double? ItemLevelAverage { get; set; }
     }
 }

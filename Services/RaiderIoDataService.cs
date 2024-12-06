@@ -15,6 +15,8 @@ namespace Singularity.Services
         private readonly IRaiderIoApi _raiderIoApi;
         private readonly string RealmSlug;
         private readonly string RaidDifficulty;
+        private readonly int TopXBossRanks;
+        private readonly string TeamNameToIgnoreForRace;
         public readonly List<Raid> Raids;
         private static bool _dataIsReady = false;
 
@@ -26,6 +28,8 @@ namespace Singularity.Services
             var raiderIoOptions = options.Value;
             RealmSlug = raiderIoOptions.Realm;
             RaidDifficulty = raiderIoOptions.RaidDifficulty;
+            TopXBossRanks = raiderIoOptions.TopXBossRanks;
+            TeamNameToIgnoreForRace = raiderIoOptions.TeamNameToIgnoreForRace;
             Raids = raiderIoOptions.Raids;
         }
 
@@ -43,8 +47,9 @@ namespace Singularity.Services
             }
 
             var raceViewModel = new RaceViewModel();
-            await GetRaidRankingsAsync(raceViewModel);
-            //await GetBossRankingsAsync(raceViewModel, bosses);
+            var raidName = Raids.First(s => s.IsCurrent).RaidName;
+            await GetRaidRankingsAsync(raceViewModel, raidName);
+            await GetTopXBossRankingsAsync(raceViewModel, bosses, raidName);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
@@ -56,33 +61,46 @@ namespace Singularity.Services
             return raceViewModel;
         }
 
-        private async Task<RaidRanking> GetRaidRankingsAsync(RaceViewModel raceViewModel)
+        private async Task<RaidRanking> GetRaidRankingsAsync(RaceViewModel raceViewModel, string raidName)
         {
-            var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
-                    () => _raiderIoApi.GetRaidRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, RealmSlug));
+            var (data, statusCode) = await GetCachedDataAsync($"RaceRankingData_{raidName}_{RaidDifficulty}",
+                    () => _raiderIoApi.GetRaidRankings(raidName, RaidDifficulty, RealmSlug));
 
             if (statusCode == HttpStatusCode.OK && data != null)
             {
-                raceViewModel.RaidRankings = data;
+                raceViewModel.RaidRankingParent = data;
                 return data;
             }
             
             return new RaidRanking();
         }
 
-        private async Task<BossRanking> GetBossRankingsAsync(RaceViewModel raceViewModel, IEnumerable<string> bossNames)
+        private async Task<List<BossRanking>> GetTopXBossRankingsAsync(RaceViewModel raceViewModel, IEnumerable<Boss> bosses, string raidName)
         {
-            foreach (var bossName in bossNames)
+            var bossRankings = new List<BossRanking>();
+            foreach (var boss in bosses)
             {
-                var (data, statusCode) = await GetCachedDataAsync("RaceRankingData",
-                    () => _raiderIoApi.GetBossRankings(Raids.First(s => s.IsCurrent).RaidName, RaidDifficulty, bossName, RealmSlug));
-
-                if (statusCode == HttpStatusCode.OK && data != null && data.bossRankings.Any())
-                {                    
-                    raceViewModel.BossRankings.bossRankings.Add(data.bossRankings.First());                    
+                if (boss?.Slug == null)
+                {
+                    continue;
                 }
-            }            
-            
+
+                var bossSlug = GetBossSlug(boss.Slug);
+                var (data, statusCode) = await GetCachedDataAsync($"BossRankingData_{raidName}_{RaidDifficulty}_{bossSlug}",
+                    () => _raiderIoApi.GetBossRankings(raidName, RaidDifficulty, bossSlug, RealmSlug));
+
+                if (statusCode != HttpStatusCode.OK || data == null)
+                {
+                    continue;
+                }
+
+                bossRankings.Add(new BossRanking
+                {
+                    BossRankings = GetTopRankings(data.BossRankings)
+                });
+            }
+
+            raceViewModel.BossRankings = bossRankings;
             return raceViewModel.BossRankings;
         }
 
@@ -127,6 +145,39 @@ namespace Singularity.Services
             {
                 _cacheLock.Release();
             }
+        }
+
+        public List<Ranking> GetTopRankings(List<Ranking> bossRankings)
+        {
+            var topRankings = bossRankings.Where(r => r.Rank <= TopXBossRanks).ToList();
+
+            bool behindTheCurveExists = topRankings
+                .Any(r => r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase));
+
+            if (behindTheCurveExists)
+            {
+                topRankings = bossRankings
+                    .Where(r => r.Rank <= TopXBossRanks + 1)
+                    .ToList();
+            }
+
+            return topRankings;
+        }
+
+        public string GetBossSlug(string bossName)
+        {
+            var specialSlugs = new Dictionary<string, string>
+            {
+                { "nexusprincess-kyveza", "nexus-princess-kyveza" },
+                { "sikran-captain-of-the-sureki", "sikran" }
+            };
+
+            if (specialSlugs.TryGetValue(bossName, out var slug))
+            {
+                return slug;
+            }
+
+            return bossName;
         }
     }
 }
