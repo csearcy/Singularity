@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using Singularity.Models;
+using Singularity.Models.Race;
 using Singularity.Models.RaiderIoApiModels;
 using IdentityModel.Client;
 using Singularity.Services.Interfaces;
@@ -38,44 +39,50 @@ namespace Singularity.Services
             return Task.FromResult(_dataIsReady);
         }
 
-        public async Task<RaceViewModel> GetAllApiData(List<Boss> bosses)
+        public async Task<RaceModel> GetAllApiData(List<Boss> bosses)
         {
             var cacheKey = "RaceSummary";
-            if (_cache.TryGetValue(cacheKey, out RaceViewModel cachedData))
+            if (_cache.TryGetValue(cacheKey, out RaceModel cachedData))
             {
                 return cachedData;
             }
 
-            var raceViewModel = new RaceViewModel();
             var raidName = Raids.First(s => s.IsCurrent).RaidName;
-            await GetRaidRankingsAsync(raceViewModel, raidName);
-            await GetTopXBossRankingsAsync(raceViewModel, bosses, raidName);
+            var raceModel = new RaceModel {
+                SelectedExpansion = raidName,
+                Raids = Raids.ToList(),
+                BossCount = bosses.Count
+            };
+            await GetRaidRankingsAsync(raceModel, raidName);
+            await GetTopXBossRankingsAsync(raceModel, bosses, raidName);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
-            _cache.Set(cacheKey, raceViewModel, cacheEntryOptions);
+            _cache.Set(cacheKey, raceModel, cacheEntryOptions);
 
             _dataIsReady = true;
-            return raceViewModel;
+            return raceModel;
         }
 
-        private async Task<RaidRanking> GetRaidRankingsAsync(RaceViewModel raceViewModel, string raidName)
+        private async Task<RaidRanking> GetRaidRankingsAsync(RaceModel raceModel, string raidName)
         {
             var (data, statusCode) = await GetCachedDataAsync($"RaceRankingData_{raidName}_{RaidDifficulty}",
                     () => _raiderIoApi.GetRaidRankings(raidName, RaidDifficulty, RealmSlug));
 
             if (statusCode == HttpStatusCode.OK && data != null)
             {
-                raceViewModel.RaidRankingParent = data;
+                raceModel.RaidRankingParent = data;
+                int guildToIgnoreRank = data.RaidRankings?.Where(s => s.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase)).Select(s => s.Rank).FirstOrDefault() ?? 0;
+                raceModel.GuildToIgnoreRank = guildToIgnoreRank;
                 return data;
             }
             
             return new RaidRanking();
         }
 
-        private async Task<List<BossRanking>> GetTopXBossRankingsAsync(RaceViewModel raceViewModel, IEnumerable<Boss> bosses, string raidName)
+        private async Task<List<BossRanking>> GetTopXBossRankingsAsync(RaceModel raceModel, IEnumerable<Boss> bosses, string raidName)
         {
             var bossRankings = new List<BossRanking>();
             foreach (var boss in bosses)
@@ -100,8 +107,8 @@ namespace Singularity.Services
                 });
             }
 
-            raceViewModel.BossRankings = bossRankings;
-            return raceViewModel.BossRankings;
+            raceModel.BossRankings = bossRankings;
+            return raceModel.BossRankings;
         }
 
         private async Task<(T Data, HttpStatusCode StatusCode)> GetCachedDataAsync<T>(string endpointKey, Func<Task<T>> apiCall) where T : new()

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Singularity.Models;
+using Singularity.Models.Race;
 using Singularity.Services.Interfaces;
 
 namespace Singularity.Pages {
@@ -9,12 +10,12 @@ namespace Singularity.Pages {
         private readonly IBlizzardDataService _blizzardDataService = blizzardDataService;
         private readonly IRaiderIoDataService _raiderIoDataService = raiderIoDataService;
         public GuildViewModel GuildSummary { get; private set; }
-        public RaceViewModel RaceSummary { get; private set; }
+        public RaceViewModel RaceViewModel { get; private set; }
        
         protected async Task LoadCommonDataAsync()
         {
             GuildSummary = await _blizzardDataService.GetAllApiData();
-            RaceSummary = await _raiderIoDataService.GetAllApiData(GuildSummary.Bosses);
+            RaceViewModel = RaceViewModel.ToViewModel(await _raiderIoDataService.GetAllApiData(GuildSummary.Bosses));
         }
     }
 }
