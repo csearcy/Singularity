@@ -16,6 +16,7 @@ namespace Singularity.Services
         private readonly IRaiderIoApi _raiderIoApi;
         private readonly string RealmSlug;
         private readonly string RaidDifficulty;
+        private readonly int TopXRealmRaceRanks;
         private readonly int TopXBossRanks;
         private readonly string TeamNameToIgnoreForRace;
         public readonly List<Raid> Raids;
@@ -30,6 +31,7 @@ namespace Singularity.Services
             RealmSlug = raiderIoOptions.Realm;
             RaidDifficulty = raiderIoOptions.RaidDifficulty;
             TopXBossRanks = raiderIoOptions.TopXBossRanks;
+            TopXRealmRaceRanks = raiderIoOptions.TopXRealmRaceRanks;
             TeamNameToIgnoreForRace = raiderIoOptions.TeamNameToIgnoreForRace;
             Raids = raiderIoOptions.Raids;
         }
@@ -47,10 +49,11 @@ namespace Singularity.Services
                 return cachedData;
             }
 
-            var raidName = Raids.First(s => s.IsCurrent).RaidName;
-            var raceModel = new RaceModel {
+            var raidName = Raids.First(s => s.IsCurrent).RaidSlugName;
+            var raceModel = new RaceModel
+            {
                 SelectedExpansion = raidName,
-                Raids = Raids.ToList(),
+                Raids = Raids,
                 BossCount = bosses.Count
             };
             await GetRaidRankingsAsync(raceModel, raidName);
@@ -76,9 +79,10 @@ namespace Singularity.Services
                 raceModel.RaidRankingParent = data;
                 int guildToIgnoreRank = data.RaidRankings?.Where(s => s.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase)).Select(s => s.Rank).FirstOrDefault() ?? 0;
                 raceModel.GuildToIgnoreRank = guildToIgnoreRank;
+                raceModel.TopXRealmRaceRanks = GetTopRealmRaceRankings(data.RaidRankings);
                 return data;
             }
-            
+
             return new RaidRanking();
         }
 
@@ -103,7 +107,7 @@ namespace Singularity.Services
 
                 bossRankings.Add(new BossRanking
                 {
-                    BossRankings = GetTopRankings(data.BossRankings)
+                    BossRankings = GetTopBossRankings(data.BossRankings)
                 });
             }
 
@@ -154,7 +158,36 @@ namespace Singularity.Services
             }
         }
 
-        public List<Ranking> GetTopRankings(List<Ranking> bossRankings)
+        public List<Ranking> GetTopRealmRaceRankings(List<Ranking> realmRankings)
+        {
+            var test = realmRankings.Take(5).ToList();
+            var filteredRankings = test
+                .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(r => r.Rank)
+                .Take(TopXRealmRaceRanks)
+                .ToList();
+
+            for (int i = 0; i < filteredRankings.Count; i++)
+            {
+                filteredRankings[i].Rank = i + 1;
+            }
+
+            while (filteredRankings.Count < TopXRealmRaceRanks)
+            {
+                filteredRankings.Add(new Ranking
+                {
+                    Rank = filteredRankings.Count + 1,
+                    Guild = new Guild 
+                    { 
+                        Name = "TBD" 
+                    }
+                });
+            }
+
+            return filteredRankings;
+        }
+
+        public List<Ranking> GetTopBossRankings(List<Ranking> bossRankings)
         {
             var topRankings = bossRankings.Where(r => r.Rank <= TopXBossRanks).ToList();
 

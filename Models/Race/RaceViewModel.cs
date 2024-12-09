@@ -8,13 +8,13 @@ namespace Singularity.Models.Race
 
         public static RaceViewModel ToViewModel(RaceModel raceModel)
         {
-            return new RaceViewModel
+            var raceViewModel = new RaceViewModel
             {
                 SelectedExpansion = raceModel.SelectedExpansion,
-                Raids = raceModel.Raids.Select(raid => new Tuple<string, string>(raid.RaiderIoApiName, raid.RaidName)).ToList(),
+                Raids = raceModel.Raids.Select(raid => new Tuple<string, string>(raid.RaidSlugName, raid.RaidName)).ToList(),
                 RealmRace = new RealmRaceViewModel {
                     GuildToIgnoreRank = raceModel.GuildToIgnoreRank,
-                    RankingViewModels = raceModel?.RaidRankingParent?.RaidRankings.Select(ranking => new RankingViewModel {
+                    RankingViewModels = raceModel.TopXRealmRaceRanks.OrderBy(s => s.Rank).Select(ranking => new RankingViewModel {
                         TeamName = ranking?.Guild?.Name ?? "TBD",
                         Rank = ranking?.Rank.ToString() ?? "",
                         Faction = ranking?.Guild?.Faction ?? "",
@@ -23,6 +23,8 @@ namespace Singularity.Models.Race
                     }).ToList() ?? new List<RankingViewModel>()
                 }
             };
+
+            return raceViewModel;
         }
     }
 }

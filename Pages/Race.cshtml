@@ -14,9 +14,7 @@
 }
 
 @if (Model.RaceViewModel != null)
-{
-    @if (Model.RaceViewModel != null)
-    {
+{    
     <div id="racecontent">
         <div class="race-wrapper">
             <div class="title-bar-main">
@@ -40,9 +38,9 @@
                             <table id="guild-info-table-@team.TeamName" class="guildinfotable">
                                 <tbody>
                                     <tr>
-                                        <td class="guildinfotablerank">team.Rank</td>
+                                        <td class="guildinfotablerank">@team.Rank</td>
                                         <td class="faction-cell-@team.Faction"></td>
-                                        <td class="guildinfotable">@team.TeamName/td>
+                                        <td class="guildinfotable">@team.TeamName</td>
                                         <td class="guildinfotabledata">@team.EncounterDefeated/@team.TotalEncounters</td>
                                     </tr>
                                 </tbody>
@@ -91,12 +89,7 @@
                 <div class="wrapper-footer"></div>
             </div>
         </div>
-    </div>
-    }
-    else
-    {
-        @Html.Partial("_DataLoading")
-    }
+    </div>    
 }
 else
 {
