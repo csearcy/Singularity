@@ -8,5 +8,8 @@ namespace Singularity.Models.Race
         public string EncounterDefeated { get; set; } = default!;
         public string TotalEncounters { get; set; } = default!;
         public string Progress { get; set; } = default!;
+        public double? ProgressAsDouble { get; set; } = default!;
+        public DateTime? FirstDefeatedDate { get; set; } = default!;
+
     }
 }

@@ -14,17 +14,17 @@
 }
 
 @if (Model.RaceViewModel != null)
-{    
+{
     <div id="racecontent">
-        <div class="race-wrapper">
-            <div class="title-bar-main">
-                <div class="title-main">
-                    <h2 class="title">Race to Realm 2nd</h2>
-                </div>
-                <div class="raidracemenu">
-                    <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select"
-                        aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
-                        @foreach (var raid in Model.RaceViewModel.Raids)
+    <div class="race-wrapper">
+        <div class="title-bar-main">
+            <div class="title-main">
+                <h2 class="title">Race to Realm 2nd</h2>
+            </div>
+            <div class="raidracemenu">
+                <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select"
+                    aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
+                    @foreach (var raid in Model.RaceViewModel.Raids)
                         {
                             <option value="@raid.Item1">@raid.Item2</option>
                         }
@@ -33,7 +33,8 @@
             </div>
             <div id="race-div" class="race-div">
                 <div id="race-over-all" class="raceoveralltable">
-                    @foreach(var team in Model.RaceViewModel.RealmRace.RankingViewModels) {
+                    @foreach (var team in Model.RaceViewModel.RealmRace.RankingViewModels)
+                    {
                         <div id="guild-info-@team.TeamName" class="guildinfo">
                             <table id="guild-info-table-@team.TeamName" class="guildinfotable">
                                 <tbody>
@@ -51,45 +52,38 @@
             </div>
         </div>
         <div id="boss-tables-id" class="boss-tables-class">
-            <div class="race-wrapper boss" id="boss-ulgrax-the-devourer">
-                <div id="boss-name-ulgrax-the-devourer" class="title-bar-race">
-                    <h2 class="team">Ulgrax the Devourer</h2>
+            @foreach (var boss in Model.RaceViewModel.BossRace.BossViewModels)
+            {
+                <div class="race-wrapper boss" id="boss-@boss.NameSlug">
+                    <div id="boss-name-@boss.NameSlug" class="title-bar-race">
+                        <h2 class="team">@boss.Name</h2>
+                    </div>
+                    <div class="bossoveralltable">
+                        @foreach (var team in boss.RankingViewModels) 
+                        {
+                            <div class="guildinfo-2">
+                                <table id="boss-table-@boss.NameSlug" class="guildinfoboss">
+                                    <tbody>
+                                        <tr>
+                                            <td class="bossinfotablerank">@team.Rank</td>
+                                            <td class="faction-cell-@team.Faction"></td>
+                                            <td class="bossinfotablename">@team.TeamName</td>
+                                            <td class="bossinfotablebestpull">@team.Progress</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        
+                        <div class="boss-image">
+                            <img src="@boss.ImageUrl">
+                        </div>
+                    </div>
+                    <div class="wrapper-footer"></div>
                 </div>
-                <div class="bossoveralltable">
-                    <div class="guildinfo-2">
-                        <table id="boss-table-0-ulgrax-the-devourer" class="guildinfoboss">
-                            <tbody>
-                                <tr>
-                                    <td class="bossinfotablerank">1</td>
-                                    <td class="faction-cell-alliance"></td>
-                                    <td class="bossinfotablename">The Gentlemen</td>
-                                    <td class="bossinfotablebestpull">DEFEATED</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="guildinfo-2">
-                        <table id="boss-table-1-ulgrax-the-devourer" class="guildinfoboss">
-                            <tbody>
-                                <tr>
-                                    <td class="bossinfotablerank">2</td>
-                                    <td class="faction-cell-alliance"></td>
-                                    <td class="bossinfotablename">Counterparts</td>
-                                    <td class="bossinfotablebestpull">DEFEATED</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    @* repeat for top five teams less behind the curve *@
-                    <div class="boss-image">
-                        <img id="nerubar-boss-image-0"
-                            src="https://render.worldofwarcraft.com/us/npcs/zoom/creature-display-117772.jpg">
-                    </div>
-                </div>
-                <div class="wrapper-footer"></div>
-            </div>
+            }
         </div>
-    </div>    
+    </div>
 }
 else
 {

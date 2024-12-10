@@ -107,11 +107,15 @@ namespace Singularity.Services
 
                 bossRankings.Add(new BossRanking
                 {
+                    BossName = boss?.Name ?? "N/A",
+                    BossSlugName = boss?.Slug ?? "N/A",
+                    BossImageUrl = boss?.ImageUrl ?? "N/A",
                     BossRankings = GetTopBossRankings(data.BossRankings)
                 });
             }
 
             raceModel.BossRankings = bossRankings;
+            raceModel.TopXBossRaceRanks = bossRankings;
             return raceModel.BossRankings;
         }
 
@@ -160,8 +164,7 @@ namespace Singularity.Services
 
         public List<Ranking> GetTopRealmRaceRankings(List<Ranking> realmRankings)
         {
-            var test = realmRankings.Take(5).ToList();
-            var filteredRankings = test
+            var filteredRankings = realmRankings
                 .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(r => r.Rank)
                 .Take(TopXRealmRaceRanks)
@@ -189,19 +192,30 @@ namespace Singularity.Services
 
         public List<Ranking> GetTopBossRankings(List<Ranking> bossRankings)
         {
-            var topRankings = bossRankings.Where(r => r.Rank <= TopXBossRanks).ToList();
+            var filteredRankings = bossRankings
+                .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(r => r.Rank)
+                .Take(TopXBossRanks)
+                .ToList();
 
-            bool behindTheCurveExists = topRankings
-                .Any(r => r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase));
-
-            if (behindTheCurveExists)
+            for (int i = 0; i < filteredRankings.Count; i++)
             {
-                topRankings = bossRankings
-                    .Where(r => r.Rank <= TopXBossRanks + 1)
-                    .ToList();
+                filteredRankings[i].Rank = i + 1;
             }
 
-            return topRankings;
+            while (filteredRankings.Count < TopXBossRanks)
+            {
+                filteredRankings.Add(new Ranking
+                {
+                    Rank = filteredRankings.Count + 1,
+                    Guild = new Guild 
+                    { 
+                        Name = "TBD" 
+                    }
+                });
+            }
+
+            return filteredRankings;
         }
 
         public string GetBossSlug(string bossName)
