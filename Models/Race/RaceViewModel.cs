@@ -4,7 +4,7 @@ namespace Singularity.Models.Race
         public string SelectedExpansion { get; set; }
         public List<Tuple<string, string>> Raids { get; set; }
         public RealmRaceViewModel RealmRace { get; set; }
-        //public BossRace? BossRace { get; set; }
+        public BossRaceViewModel? BossRace { get; set; }
 
         public static RaceViewModel ToViewModel(RaceModel raceModel)
         {
@@ -19,9 +19,13 @@ namespace Singularity.Models.Race
                         Rank = ranking?.Rank.ToString() ?? "",
                         Faction = ranking?.Guild?.Faction ?? "",
                         EncounterDefeated = ranking?.EncountersDefeated?.Count.ToString() ?? "0",
-                        TotalEncounters = raceModel.BossCount.ToString()
+                        TotalEncounters = raceModel.BossCount.ToString(),
+                        Progress = $"{ranking?.EncountersDefeated?.Count ?? 0}/{raceModel.BossCount}"
                     }).ToList() ?? new List<RankingViewModel>()
-                }
+                },
+                BossRace = new BossRaceViewModel {
+
+                } 
             };
 
             return raceViewModel;
