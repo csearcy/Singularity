@@ -17,10 +17,11 @@
 {
     <div id="racecontent">
     <div class="race-wrapper">
-        <div class="title-bar-main">
-            <div class="title-main">
-                <h2 class="title">Race to Realm 2nd</h2>
+        <div class="title-bar">
+            <div class="title-name">
+                <h2 class="title-text">Race to Realm 2nd</h2>
             </div>
+        </div>
             <div class="raidracemenu">
                 <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select"
                     aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
@@ -30,6 +31,9 @@
                         }
                     </select>
                 </div>
+
+            <div id="racetitle" class="title-bar-overall">
+                 <h2 class="team">Overall Rankings</h2>
             </div>
             <div id="race-div" class="race-div">
                 <div id="race-over-all" class="raceoveralltable">
@@ -41,7 +45,7 @@
                                     <tr>
                                         <td class="guildinfotablerank">@team.Rank</td>
                                         <td class="faction-cell-@team.Faction"></td>
-                                        <td class="guildinfotable">@team.TeamName</td>
+                                        <td class="guildinfoname">@team.TeamName</td>
                                         <td class="guildinfotabledata">@team.Progress</td>
                                     </tr>
                                 </tbody>
@@ -55,29 +59,30 @@
             @foreach (var boss in Model.RaceViewModel.BossRace.BossViewModels)
             {
                 <div class="race-wrapper boss" id="boss-@boss.NameSlug">
+                    <div class="boss-image">
+                            <img id="boss" src="@boss.ImageUrl">
+                        </div>
                     <div id="boss-name-@boss.NameSlug" class="title-bar-race">
                         <h2 class="team">@boss.Name</h2>
                     </div>
-                    <div class="bossoveralltable">
+                        
+                    <div class="raceoveralltable">
                         @foreach (var team in boss.RankingViewModels) 
                         {
-                            <div class="guildinfo-2">
-                                <table id="boss-table-@boss.NameSlug" class="guildinfoboss">
-                                    <tbody>
-                                        <tr>
-                                            <td class="bossinfotablerank">@team.Rank</td>
-                                            <td class="faction-cell-@team.Faction"></td>
-                                            <td class="bossinfotablename">@team.TeamName</td>
-                                            <td class="bossinfotablebestpull">@team.Progress</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="guildinfo">
+                                <table id="guild-info-table-@team.TeamName" class="guildinfotable">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossinfotablerank">@team.Rank</td>
+                                        <td class="faction-cell2-@team.Faction"></td>
+                                        <td class="guildinfobosstable">@team.TeamName</td>
+                                        <td class="bossinfotabledata">@team.Progress</td>
+                                        <td class="guildinfotableprogress"> <progress max="100" value="40"></progress></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             </div>
                         }
-                        
-                        <div class="boss-image">
-                            <img src="@boss.ImageUrl">
-                        </div>
                     </div>
                     <div class="wrapper-footer"></div>
                 </div>
