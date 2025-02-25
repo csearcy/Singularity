@@ -109,7 +109,7 @@ namespace Singularity.Services
                 {
                     BossName = boss?.Name ?? "N/A",
                     BossSlugName = boss?.Slug ?? "N/A",
-                    BossImageUrl = boss?.ImageUrl ?? "N/A",
+                    BossImageUrl = GetBossImageUrl(boss?.Slug),
                     BossRankings = GetTopBossRankings(data.BossRankings)
                 });
             }
@@ -180,9 +180,9 @@ namespace Singularity.Services
                 filteredRankings.Add(new Ranking
                 {
                     Rank = filteredRankings.Count + 1,
-                    Guild = new Guild 
-                    { 
-                        Name = "TBD" 
+                    Guild = new Guild
+                    {
+                        Name = "TBD"
                     }
                 });
             }
@@ -208,9 +208,9 @@ namespace Singularity.Services
                 filteredRankings.Add(new Ranking
                 {
                     Rank = filteredRankings.Count + 1,
-                    Guild = new Guild 
-                    { 
-                        Name = "TBD" 
+                    Guild = new Guild
+                    {
+                        Name = "TBD"
                     }
                 });
             }
@@ -232,6 +232,24 @@ namespace Singularity.Services
             }
 
             return bossName;
+        }
+
+        private string GetBossImageUrl(string bossSlug)
+        {
+            if (string.IsNullOrEmpty(bossSlug))
+            {
+                return "N/A";
+            }
+            var raidSlugName = Raids.First(s => s.IsCurrent).RaidSlugName;
+            
+            var filePath = Path.Combine("wwwroot", "images", "race", "Bosses", raidSlugName, $"{bossSlug}.png");
+
+            if (File.Exists(filePath))
+            {
+                return $"/images/race/Bosses/{raidSlugName}/{bossSlug}.png";
+            }
+
+            return "/images/race/Bosses/default.png";
         }
     }
 }
