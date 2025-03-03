@@ -315,6 +315,7 @@ body {
 
 .guildinfoname {
     width: 63%;
+    white-space: nowrap;
     overflow: hidden;
     padding-left: 5px;
     line-height: 45px;
@@ -331,7 +332,8 @@ body {
 }
 
 .guildinfobosstable {
-    width: 26%;
+    width: 34%;
+    white-space: nowrap;
     overflow: hidden;
     padding-left: 5px;
     line-height: 45px;
@@ -367,6 +369,7 @@ body {
 .guildinfotabledata {
     height: 45px;
     width: 15%;
+    overflow: hidden;
     padding-right: 10px;
     line-height: 45px;
     text-align: center;
@@ -422,7 +425,7 @@ body {
 
 .guildinfotableprogress {
     height: 25px;
-    width: 60%;
+    width: 52%;
     padding-right: 10px;
     text-align: center;
     font-family: 'Orbitron';

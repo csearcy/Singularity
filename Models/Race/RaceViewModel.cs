@@ -42,15 +42,15 @@ namespace Singularity.Models.Race
                                 Faction = ranking?.Guild?.Faction ?? "",
                                 ProgressAsDouble = (ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == boss.BossSlugName)?.IsDefeated) == null ? 
                                 0 :
-                                (bool)(ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == boss.BossSlugName).IsDefeated) ?
+                                (bool)(ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == boss.BossSlugName)?.IsDefeated) ?
                                     100 :
                                     ranking?.EncountersPulled.First(s => s.Slug == boss.BossSlugName).BestPercent,
                                 Progress = (ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == boss.BossSlugName)?.IsDefeated) == null ? 
                                 "0%" :
-                                (bool)(ranking?.EncountersPulled.First(s => s.Slug == boss.BossSlugName).IsDefeated) ?
+                                (bool)(ranking?.EncountersPulled.First(s => s.Slug == boss.BossSlugName)?.IsDefeated) ?
                                     "DEFEATED" :
                                     $"{ranking?.EncountersPulled.First(s => s.Slug == boss.BossSlugName).BestPercent.ToString()}%",
-                                FirstDefeatedDate = ranking?.EncountersDefeated.FirstOrDefault(s => s.Slug == boss.BossSlugName)?.FirstDefeated ?? null
+                                FirstDefeatedDate = ranking?.EncountersDefeated?.FirstOrDefault(s => s.Slug == boss.BossSlugName)?.FirstDefeated ?? null
                             }).ToList() ?? new List<RankingViewModel>()
                         }).ToList() ?? new List<BossViewModel>()
                     }

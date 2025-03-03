@@ -223,7 +223,8 @@ namespace Singularity.Services
             var specialSlugs = new Dictionary<string, string>
             {
                 { "nexusprincess-kyveza", "nexus-princess-kyveza" },
-                { "sikran-captain-of-the-sureki", "sikran" }
+                { "sikran-captain-of-the-sureki", "sikran" },
+                { "the-onearmed-bandit", "onearmed-bandit" }
             };
 
             if (specialSlugs.TryGetValue(bossName, out var slug))
