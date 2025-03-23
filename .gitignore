@@ -92,5 +92,5 @@ obj/Debug/net8.0/Singularity.AssemblyInfo.cs
 obj/Debug/net8.0/Singularity.AssemblyInfoInputs.cache
 obj/Debug/net8.0/Singularity.csproj.FileListAbsolute.txt
 obj/Debug/net8.0/Singularity.GeneratedMSBuildEditorConfig.editorconfig
-appsettings.Development.json
-appsettings.json
+
+.fake

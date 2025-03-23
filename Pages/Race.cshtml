@@ -1,0 +1,97 @@
+@page
+@using Microsoft.Extensions.Caching.Memory
+@using Singularity.Models
+@using Singularity.Pages.AboutUs;
+
+@inject IMemoryCache _cache
+
+@model IndexModel
+
+@section Scripts {
+    <script>
+        var requiresData = true;
+    </script>
+    <script src="~/js/site.js"></script>
+}
+
+@if (Model.RaceViewModel != null)
+{
+    <div id="racecontent">
+    <div class="race-wrapper">
+        <div class="title-bar">
+            <div class="title-name">
+                <h2 class="title-text">Race to Realm 2nd</h2>
+            </div>
+        </div>
+            <div class="raidracemenu">
+                <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select"
+                    aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
+                    @foreach (var raid in Model.RaceViewModel.Raids)
+                        {
+                            <option value="@raid.Item1">@raid.Item2</option>
+                        }
+                    </select>
+                </div>
+
+            <div id="racetitle" class="title-bar-overall">
+                 <h2 class="team">Overall Rankings</h2>
+            </div>
+            <div id="race-div" class="race-div">
+                <div id="race-over-all" class="raceoveralltable">
+                    @foreach (var team in Model.RaceViewModel.RealmRace.RankingViewModels)
+                    {
+                        <div id="guild-info-@team.TeamName" class="guildinfo">
+                            <table id="guild-info-table-@team.TeamName" class="guildinfotable">
+                                <tbody>
+                                    <tr>
+                                        <td class="guildinfotablerank">@team.Rank</td>
+                                        <td class="faction-cell-@team.Faction"></td>
+                                        <td class="guildinfoname">@team.TeamName</td>
+                                        <td class="guildinfotabledata">@team.Progress</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="boss-tables-id" class="boss-tables-class">
+            @foreach (var boss in Model.RaceViewModel.BossRace.BossViewModels)
+            {
+                <div class="race-wrapper boss" id="boss-@boss.NameSlug">
+                    <div class="boss-image">
+                            <img id="boss" src="@boss.ImageUrl">
+                        </div>
+                    <div id="boss-name-@boss.NameSlug" class="title-bar-race">
+                        <h2 class="team">@boss.Name</h2>
+                    </div>
+                        
+                    <div class="raceoveralltable">
+                        @foreach (var team in boss.RankingViewModels) 
+                        {
+                            <div class="guildinfo">
+                                <table id="guild-info-table-@team.TeamName" class="guildinfotable">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossinfotablerank">@team.Rank</td>
+                                        <td class="faction-cell2-@team.Faction"></td>
+                                        <td class="guildinfobosstable">@team.TeamName</td>
+                                        <td class="bossinfotabledata">@team.Progress</td>
+                                        <td class="guildinfotableprogress"> <progress max="100" value="@team.ProgressAsDouble"></progress></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        }
+                    </div>
+                    <div class="wrapper-footer"></div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    @Html.Partial("_DataLoading")
+}
