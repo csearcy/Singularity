@@ -60,10 +60,10 @@ body {
     Position: sticky;
     z-index: 10;
     top: 0px;
-    Height: 45px;
+    Height: 38px;
     width: 100%;
-    background-image: linear-gradient( to bottom, #000000, #041048);
-    box-shadow: 0px 5px 5px 0px rgba(0,172,237,.7);
+    background-color: #181818;
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,.7);
 }
 
 .nav-bar ul {
@@ -83,7 +83,7 @@ body {
     justify-content: center;
     align-items: center;
     float: left;
-    Height: 45px;
+    Height: 38px;
     padding-left: 30px;
     padding-right: 60px;
 }
@@ -100,7 +100,7 @@ body {
 .menu:link {
     transition: .5s;
     text-decoration: none;
-    -webkit-text-stroke: 1px #fff471;
+    -webkit-text-stroke: 1px #ffffff;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -111,7 +111,7 @@ body {
 .menu:visited {
     transition: .5s;
     text-decoration: none;
-    -webkit-text-stroke: 1px #fff471;
+    -webkit-text-stroke: 1px #ffffff;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -126,11 +126,6 @@ body {
     font-weight: normal;
     font-family: 'Orbitron';
     text-shadow:
-    0 0 1px #fff471,
-    0 0 3px #fff471,
-    0 0 7px #fff471,
-    0 0 12px #fff471,
-    0 0 17px #fff471;
     font-size: 1.5em;
 }
 
@@ -243,7 +238,7 @@ body {
     font-family: 'Roboto Condensed';
     color: #ffffff;
     font-size: 1.2em;
-    background-image: url(/images/logos/singularitywatermark.png);
+    background-image: url(/images/logos/aphelionwatermark.png);
     background-size: 250px;
     background-position: center;
     background-repeat: no-repeat;
@@ -529,7 +524,7 @@ progress:after {
 
 }
 .content-text {
-    font-weight: Bold;
+    font-weight: normal;
     font-family: 'Orbitron';
     color: #ffffff;
     margin: 20px;
@@ -581,7 +576,7 @@ progress:after {
 
 .footer:link {
     text-decoration: none;
-    -webkit-text-stroke: 1px #fff471;
+    -webkit-text-stroke: 1px #ffffff;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -597,7 +592,7 @@ progress:after {
 
 .footer:visited {
     text-decoration: none;
-    -webkit-text-stroke: 1px #fff471;
+    -webkit-text-stroke: 1px #ffffff;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -612,6 +607,9 @@ progress:after {
 }
 
 .footer:hover {
+    text-decoration: none;
+    -webkit-text-stroke: 1px #fff471;
+    color: #fff471;
     background-color: #1f1f1f;
 }
 
