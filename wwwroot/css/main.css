@@ -41,17 +41,17 @@ body {
 .logo {
     text-decoration: none;
     letter-spacing: 2px;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #00aced;
     color: #ffffff;
-    font-weight: normal;
+    font-weight: bold;
     font-family: 'Orbitron';
     text-shadow:
-      0 0 1px #4be4b3,
-      0 0 3px #4be4b3,
-      0 0 7px #4be4b3,
-      0 0 12px #4be4b3,
-      0 0 17px #4be4b3;
-    font-size: 1.8em;
+      0 0 1px #00aced,
+      0 0 3px #00aced,
+      0 0 7px #00aced,
+      0 0 12px #00aced,
+      0 0 17px #00aced;
+    font-size: 2.5em;
     line-height: 55px;
 }
 
@@ -62,8 +62,8 @@ body {
     top: 0px;
     Height: 45px;
     width: 100%;
-    background-image: linear-gradient( to bottom, #000000, #29035d);
-    box-shadow: 0px 5px 5px 0px rgba(0,0,0,1);
+    background-image: linear-gradient( to bottom, #000000, #041048);
+    box-shadow: 0px 5px 5px 0px rgba(0,172,237,.7);
 }
 
 .nav-bar ul {
@@ -100,7 +100,7 @@ body {
 .menu:link {
     transition: .5s;
     text-decoration: none;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -111,7 +111,7 @@ body {
 .menu:visited {
     transition: .5s;
     text-decoration: none;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -121,16 +121,16 @@ body {
 .menu:hover {
     transition: .5s;
     text-decoration: none;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
     text-shadow:
-      0 0 1px #4be4b3,
-      0 0 3px #4be4b3,
-      0 0 7px #4be4b3,
-      0 0 12px #4be4b3,
-      0 0 17px #4be4b3;
+    0 0 1px #fff471,
+    0 0 3px #fff471,
+    0 0 7px #fff471,
+    0 0 12px #fff471,
+    0 0 17px #fff471;
     font-size: 1.5em;
 }
 
@@ -172,13 +172,13 @@ body {
     margin: 20px;
     height: 190px;
     width:760px;
-    background-image: linear-gradient( to bottom, #000000, #29035d);  
+    background-image: linear-gradient( to bottom, #000000, #00AEEF);  
 }
 
 .banner {
     height: 190px;
     width:760px;
-    background-image: url(/images/logos/singularitywatermark.png);
+    background-image: url(/images/logos/aphelionwatermark.png);
     background-position: center;
     background-repeat:no-repeat;
     background-size: 300px;
@@ -186,18 +186,20 @@ body {
 }
 
 .banner-title {
+    margin: 0px;
     text-decoration: none;
     letter-spacing: 2px;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
+    font-size: 5em;
     text-shadow:
-      0 0 1px #4be4b3,
-      0 0 3px #4be4b3,
-      0 0 7px #4be4b3,
-      0 0 12px #4be4b3,
-      0 0 17px #4be4b3;
+      0 0 1px #fff471,
+      0 0 3px #fff471,
+      0 0 7px #fff471,
+      0 0 12px #fff471,
+      0 0 17px #fff471;
     line-height: 190px;
 }
 
@@ -209,10 +211,10 @@ body {
 
 .title-bar {
     position: relative;
-    -webkit-box-shadow:inset 3px 0px 0px 0px #4be4b3;
-    -moz-box-shadow:inset 3px 0px 0px 0px #4be4b3;
-    box-shadow:inset 3px 0px 0px 0px #4be4b3;
-    background-image: linear-gradient(to right, rgba(75, 228, 179, .4), rgba(0, 0, 0, 0));
+    -webkit-box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    -moz-box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    background-image: linear-gradient(to right, rgba(0, 174, 239, .4), rgba(0, 0, 0, 0));
     width: 100%;
     height: 40px;
 }
@@ -225,7 +227,7 @@ body {
     text-transform: uppercase;
     font-family: 'Orbitron';
     line-height: 40px;
-    color: #4be4b3;
+    color: #00AEEF;
     font-weight: bold;
     font-size: 1.3rem;
     letter-spacing: 0.5px;
@@ -460,7 +462,7 @@ progress::-webkit-progress-value {
 	display:inline-block;
 	height:10px;
 	margin:0px -10px 0 0;
-	background: #4be4b3;
+	background: #00AEEF;
     border: 1px, #000000;
 	border-radius: 5px;
 	box-shadow:0px 0px 6px #777 inset;
@@ -484,7 +486,7 @@ progress:after {
 }
 .title-bar-race {
     height: 50px;
-    border: 1px solid #4be4b3;
+    border: 1px solid #00AEEF;
     border-radius: 10px; 
 }
 
@@ -494,13 +496,13 @@ progress:after {
     margin-right:20px;
     padding-left: 20px;
     height: 50px;
-    border: 1px solid #4be4b3;
+    border: 1px solid #00AEEF;
     border-radius: 10px; 
 }
 
 .boss-image {
     margin-right: 20px;
-    border-right: 1px solid #4be4b3;
+    border-right: 1px solid #00AEEF;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -518,19 +520,20 @@ progress:after {
 
 .team { 
     margin: 0px;
+    font-weight: Bold;
     text-align: left;
     font-family: 'Orbitron';
     font-size: 1.1em;
     line-height: 50px;
-    color: #4be4b3;
+    color: #00AEEF;
 
 }
 .content-text {
-    font-weight: normal;
+    font-weight: Bold;
     font-family: 'Orbitron';
-    color: #4be4b3;
+    color: #ffffff;
     margin: 20px;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     letter-spacing: 0.5px;
     display: block;
 }
@@ -541,11 +544,11 @@ progress:after {
     color: #ffffff;
     font-family: 'Orbitron';
     text-shadow:
-      0 0 1px #4be4b3,
-      0 0 3px #4be4b3,
-      0 0 7px #4be4b3,
-      0 0 12px #4be4b3,
-      0 0 17px #4be4b3;
+      0 0 1px #00AEEF,
+      0 0 3px #00AEEF,
+      0 0 7px #00AEEF,
+      0 0 12px #00AEEF,
+      0 0 17px #00AEEF;
     font-size: 1.8em;
     line-height: 55px;
     text-align: center;
@@ -578,7 +581,7 @@ progress:after {
 
 .footer:link {
     text-decoration: none;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -594,7 +597,7 @@ progress:after {
 
 .footer:visited {
     text-decoration: none;
-    -webkit-text-stroke: 1px #4be4b3;
+    -webkit-text-stroke: 1px #fff471;
     color: #ffffff;
     font-weight: normal;
     font-family: 'Orbitron';
@@ -618,7 +621,7 @@ progress:after {
     border-radius:5px;
     padding:20px;
     min-height: 200px;
-    background-image: url("/images/logos/singularitywatermark.png");
+    background-image: url("/images/logos/aphelionwatermark.png");
     background-size: 350px;
     background-position: center;
     background-repeat: no-repeat;
@@ -708,7 +711,7 @@ progress:after {
  
  .rosterinfotitle{
      width:10%;
-     color: #4be4b3;
+     color: #00AEEF;
  }
  
  .title-text2 {
