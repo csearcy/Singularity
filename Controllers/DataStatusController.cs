@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Aphelion.Services.Interfaces;
+using Singularity.Services.Interfaces;
 
-namespace Aphelion.Controllers
+namespace Singularity.Controllers
 {
     [ApiController]
     [Route("api/data")]
