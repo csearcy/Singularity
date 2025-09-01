@@ -1,0 +1,896 @@
+body {
+    margin: 0px;
+    min-width:800px;
+    background-image: linear-gradient(#7A1D24, #3B0F13);
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-cursor {
+    cursor: wait;
+}
+
+/* Top Logo Bar CSS */
+.logo-bar {
+    Position: relative;
+    display: flex;
+    align-items: center;
+    top: 0px;
+    Height: 70px;
+    width: 100%;
+    border: 1px solid rgb(245, 212, 92);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.596);
+}
+
+.logo-div {
+    margin-left:20px;
+    float: left;
+    display:flex;
+    align-items: center;
+    Height: 71px;
+    width: 300px;
+}
+
+.logo-img {
+    float:left;
+    margin-right:10px;
+    display: block;
+    Height:55px;
+    width: 55px;
+}
+
+.logo {
+    text-decoration: none;
+    letter-spacing: 2px;
+    color: #F9FAFB;
+    font-weight: bold;
+    font-family: 'inter';
+    text-shadow: 0px 0px 8px rgb(245, 212, 92);
+    font-size: 2.5em;
+    line-height: 55px;
+}
+
+/* Main Navigation Bar */
+.nav-bar {
+    margin-right:20px;
+    Display: Flex;
+    Justify-content: right;
+}
+
+.nav-bar ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.menu-wrapper {
+    margin: auto;
+    width: 1600px;
+}
+
+.menu-link {
+    float: right;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.menu:active {
+    transition: .5s;
+    line-height: 71px;
+    text-decoration: none;
+    color: #E5E7EB;
+    font-family: 'inter';
+    font-weight: 200;
+    font-size:16px;
+}
+
+.menu:link {
+    transition: .5s;
+    line-height: 71px;
+    text-decoration: none;
+    color: #E5E7EB;
+    font-family: 'inter';
+    font-weight: 200;
+    font-size:16px;
+}
+
+
+.menu:visited {
+    transition: .5s;
+    line-height: 71px;
+    text-decoration: none;
+    color: #E5E7EB;
+    font-family: 'inter';
+    font-weight: 200;
+    font-size:16px;
+}
+
+.menu:hover {
+    transition: .5s;
+    line-height: 71px;
+    text-decoration: none;
+    color: #f5d45c;
+    font-family: 'inter';
+    font-weight: 200;
+    font-size:16px;
+}
+
+
+/* Main Page layout*/
+.webpage {
+    display: flex;
+    width:1600px;
+    margin: auto;
+    margin-top:10px;
+    margin-bottom:10px;
+    overflow: auto;
+}
+
+.wrapper-left {
+    position:relative;
+    z-index: 2;
+    overflow: auto;
+    width:1200px;
+}
+
+.wrapper-right {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    width: 400px;
+}
+
+/* Banner Content layout*/
+.banner-wrapper {
+    display: Flex;
+    justify-content: center;
+    align-items: center;
+    height: 385px;
+    box-shadow: inset 0 -10px 10px rgba(0, 0, 0, 0.596);
+    background-image: url(/images/banners/Midnight/lightBG.png);
+    background-position: center;
+    border-bottom: 1px solid rgb(245, 212, 92);
+}
+
+.banner {
+    height: 385px;
+    background-position: center;
+    background-repeat:no-repeat;
+    text-align: center;    
+}
+
+.banner-title {
+    margin: 0px;
+    display: Flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-shadow: 0px 0px 40px #6B4FD3;
+    color: #E5E7EB;
+    font-weight: bold;
+    font-family: 'inter';
+    font-size: 5em;
+}
+
+/* Content Section layout*/
+.wrapper-content {
+    margin-top: none;
+    width:1200px;
+}
+
+.title-bar {
+    position: relative;
+    -webkit-box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    -moz-box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    box-shadow:inset 3px 0px 0px 0px #00AEEF;
+    background-image: linear-gradient(to right, rgba(0, 174, 239, .4), rgba(0, 0, 0, 0));
+    width: 100%;
+    height: 40px;
+}
+
+.title-name {
+    margin-left:20px;
+
+}
+.title-text {
+    text-transform: uppercase;
+    font-family: 'inter';
+    line-height: 24px;
+    color: #f9fafb;
+    font-weight: Bold;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    display: block;
+}  
+
+.div-content {
+    margin: 10px;
+    margin-bottom: 20px;
+    font-family: 'inter';
+    font: 20px;
+    align-items: center;
+    background-color: rgba(94, 20, 24, 0.6);
+    border-radius: 1rem;                
+    padding: 1.5rem;                    
+    border: 1px solid rgb(245, 212, 92);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+              0 4px 6px -4px rgba(0,0,0,0.1);
+}
+
+.raidracemenu {
+    height:20px;
+    margin:10px;
+}
+
+.raid-dropdown {
+    float: right;
+    font-size: 20px;
+}  
+
+.race-div {
+    margin-left: 20px;
+    margin-right:20px;
+    display: flex;
+    align-items: center;
+}
+
+.race-title {
+    width:100%;
+}
+.raceoveralltable {
+    margin: auto;
+    margin-bottom: 40px;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.bossveralltable {
+    margin: auto;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.guildinfo {
+    flex: 1;
+    background-color: #131313;
+    height: 12%;
+    margin: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.guildinfotable {
+    width: 100%;
+    overflow: hidden;
+    padding-left: 5px;
+    line-height: 45px;
+    text-align: left;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #ffffff;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.guildinfoname {
+    width: 63%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 5px;
+    line-height: 45px;
+    text-align: left;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #ffffff;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+
+.guildinfoboss {
+    width: 100%;
+}
+
+.guildinfobosstable {
+    width: 34%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 5px;
+    line-height: 45px;
+    text-align: left;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #ffffff;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.guildinfotablerank {
+    width: 10%;
+    padding-left: 10px;
+    line-height: 45px;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #cccccc;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.bossinfotablerank {
+    width: 4%;
+    padding-left: 10px;
+    line-height: 45px;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #cccccc;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.guildinfotabledata {
+    height: 45px;
+    width: 15%;
+    overflow: hidden;
+    padding-right: 10px;
+    line-height: 45px;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #cccccc;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.bossinfotabledata {
+    height: 45px;
+    width: 7%;
+    padding-right: 10px;
+    line-height: 45px;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #cccccc;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+.faction-cell-alliance {
+    background: url(/images/race/alliance.png);
+    background-repeat: no-repeat;
+    width: 12%;
+    padding-right: 10px;
+    height: 45px;
+}
+
+.faction-cell-horde {
+    background: url(/images/race/horde.png);
+    background-repeat: no-repeat;
+    padding-right: 10px;
+    width: 12%;
+    height: 45px;
+}
+
+.faction-cell2-alliance {
+    background: url(/images/race/alliance.png);
+    background-repeat: no-repeat;
+    width: 5%;
+    padding-right: 10px;
+    height: 45px;
+}
+
+.faction-cell2-horde {
+    background: url(/images/race/horde.png);
+    background-repeat: no-repeat;
+    padding-right: 10px;
+    width: 5%;
+    height: 45px;
+}
+
+.guildinfotableprogress {
+    height: 25px;
+    width: 52%;
+    padding-right: 10px;
+    text-align: center;
+    font-family: 'inter';
+    font-size: 1.0em;
+    color: #cccccc;
+    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
+}
+
+progress {
+	display:inline-block;
+    display:flex;
+    align-items:center;
+	width:100%;
+	height:10px;
+	margin:0;
+	background:none;
+	border: 0;
+	border-radius: 15px;
+}
+
+progress::-webkit-progress-bar {
+    display:flex;
+    align-items:center;
+	height:10px;
+	width:100%;
+	margin:0 auto;
+	background-color: #949494;
+	border-radius: 5px;
+	box-shadow:0px 0px 6px #777 inset;
+}
+progress::-webkit-progress-value {
+	display:inline-block;
+	height:10px;
+	margin:0px -10px 0 0;
+	background: #00AEEF;
+    border: 1px, #000000;
+	border-radius: 5px;
+	box-shadow:0px 0px 6px #777 inset;
+}
+progress:after {
+	margin:-26px 0 0 -7px;
+	padding:0;
+	display:inline-block;
+}
+
+.race-wrapper.boss {
+    margin-bottom: 20px;
+    text-align: left;
+    font-family: 'inter';
+    font-size: 1.0em;
+}
+
+.boss-tables-class {
+    margin:20px;
+    margin-top: 0px;
+}
+.title-bar-race {
+    height: 50px;
+    border: 1px solid #00AEEF;
+    border-radius: 10px; 
+}
+
+.title-bar-overall {
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right:20px;
+    padding-left: 20px;
+    height: 50px;
+    border: 1px solid #00AEEF;
+    border-radius: 10px; 
+}
+
+.boss-image {
+    margin-right: 20px;
+    border-right: 1px solid #00AEEF;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:69px;
+    height:50px;
+    float: left;
+}
+
+#boss {
+    border-radius:12px 0px 0px 12px;
+    width:67px;
+    height:48px;
+}
+
+.team { 
+    margin: 0px;
+    font-weight: Bold;
+    text-align: left;
+    font-family: 'inter';
+    font-size: 1.1em;
+    line-height: 50px;
+    color: #00AEEF;
+
+}
+.content-text {
+    font-weight: 300;
+    font-family: 'inter';
+    color: #e5e7eb;
+    margin: 20px;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.data-loading {
+    text-decoration: none;
+    letter-spacing: 2px;
+    color: #ffffff;
+    font-family: 'inter';
+    text-shadow:
+      0 0 1px #00AEEF,
+      0 0 3px #00AEEF,
+      0 0 7px #00AEEF,
+      0 0 12px #00AEEF,
+      0 0 17px #00AEEF;
+    font-size: 1.8em;
+    line-height: 55px;
+    text-align: center;
+  }
+
+.data-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+  
+/* Rightmenu Content layout*/
+.checkusout-wrapper {
+    margin: 10px;
+    margin-top: 20px;
+    background-color: rgb(74, 15, 19,.6);   
+    border-radius: 1rem;                       
+    padding: 1rem;                             
+    border: 1px solid rgb(245, 212, 92);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); 
+}
+
+.checkusout-left {
+    margin-left: 40px;
+    text-align: left;
+}
+
+.submenu:active {
+  display: block;
+  padding: 0.5rem 0.75rem;            
+  border-radius: 0.5rem;
+  font-family: 'inter';
+  font-weight: 200;
+  font-size:16px;
+  color: #E5E7EB;                    
+  font-size: 1rem;                   
+  line-height: 1.5rem;               
+  text-decoration: none;             
+  transition: background-color 0.5s ease;
+}
+
+.submenu:visited {
+  display: block;
+  padding: 0.5rem 0.75rem;            
+  border-radius: 0.5rem;
+  font-family: 'inter';
+  font-weight: 200;
+  font-size:16px;
+  color: #E5E7EB;                    
+  font-size: 1rem;                   
+  line-height: 1.5rem;               
+  text-decoration: none;             
+  transition: background-color 0.5s ease;
+}
+
+
+.submenu:link {
+  display: block;
+  padding: 0.5rem 0.75rem;            
+  border-radius: 0.5rem; 
+  font-family: 'inter';
+  font-weight: 200;
+  font-size:16px;
+  color: #E5E7EB;                    
+  font-size: 1rem;                   
+  line-height: 1.5rem;               
+  text-decoration: none;             
+  transition: background-color 0.5s ease;
+}
+
+.submenu:hover  {
+  display: block;
+  padding: 0.5rem 0.75rem;            
+  border-radius: 0.5rem;
+  background-color: rgba(255,255,255,0.05);
+  font-family: 'inter';
+  font-weight: 200;
+  font-size:16px; 
+  color: #E5E7EB;                          
+}
+
+.wrapper-event {
+    margin:10px;
+    border-radius: 1rem;                      
+    padding: 1rem; 
+    min-height: 200px;
+   background-color: rgba(94, 20, 24, 0.6);                             
+  border: 1px solid rgb(245, 212, 92);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),
+              0 2px 4px -2px rgba(0,0,0,0.1); 
+  background-image: url("/images/logos/aphelionwatermark.png");
+    background-size: 350px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+}
+
+.events {
+    font-family: 'inter';
+    font-size: 1.125rem;   
+    font-weight: 600;      
+    color: rgb(245, 212, 92);        
+    margin-bottom: 0.75rem;
+}
+
+.team-title {
+    display: none;
+ }
+ 
+ 
+ .team-div {
+     margin: auto;
+     margin-top: 15px;
+     margin-bottom: 15px;
+     position: relative;
+     display: flex;
+     width: 95%;
+     height:80px;
+     align-items: center;
+     background-color: rgba(0, 0, 0, .6);
+     border-radius: 4px;
+ }
+ 
+ .portrait {
+     position: relative;
+     width: 80px;
+     height:80px;
+     align-items: center;
+     border-right: 1px solid black;
+     border-radius: 4px 0px 0px 4px;
+     background-size: cover;
+     background-repeat: no-repeat;
+ }
+ 
+ .player-overlay {
+     position: absolute;
+     float: left;
+     display: none;
+     width: 80px;
+     height:80px;
+     align-items: center;
+     border-radius: 4px 0px 0px 4px;
+     background-image: linear-gradient(to right, rgba(000,000,000, 0) 60%, #222222 100%);
+ }
+ 
+ .player-portrait {
+     Height: 80px;
+     width: 80px;
+     border-radius: 4px 0px 0px 4px;
+ }
+ 
+ .player-info {
+     position: relative;
+     width: 90%;
+     height:80px;
+     border-radius: 4px;
+ }
+ 
+ .rosterbg {
+     width: 100%;
+     margin: auto;
+     margin-left: 15px;
+     font-family: 'Sofia Sans', sans-serif;
+     color: #ffffff;
+     text-shadow: -1px 1px 0 #000,
+                  1px 1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px -1px 0 #000;
+     font-size: 1em;
+ }
+ 
+ .rostername {
+     margin-top: 5px;
+     margin-left: 15px;
+     text-align: left;
+     font-family: 'Sofia Sans', sans-serif;
+     color:fff;
+     text-shadow: -1px 1px 0 #000,
+                  1px 1px 0 #000,
+                  1px -1px 0 #000,
+                  -1px -1px 0 #000;
+     font-size: 1.2em;
+ }
+ 
+ .rosterinfotitle{
+     width:10%;
+     color: #00AEEF;
+ }
+ 
+ .title-text2 {
+    margin-left:20px;
+    text-transform: uppercase;
+    font-family: 'inter';
+    line-height: 40px;
+    color: #4be4b3;
+    font-weight: bold;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    display: block;
+}
+ .rosterinfo{
+     width:23%;
+     text-align: left;
+ }
+ 
+ .Death-Knight {
+     color: #C41F3B;
+ }
+ 
+ .Demon-Hunter {
+     color: #A330C9;
+ }
+ 
+ .Druid {
+     color: #FF7D0A;
+ }
+ 
+ .Evoker {
+     color: #33937F;
+ }
+ 
+ .Hunter {
+     color: #ABD473;
+ }
+ 
+ .Mage {
+     color: #69CCF0;
+ }
+ 
+ .Monk {
+     color: #00FF96;
+ }
+ 
+ .Paladin {
+     color: #F58CBA;
+ }
+ 
+ .Priest {
+     color: #FFFFFF;
+ }
+ 
+ .Rogue {
+     color: #FFF569;
+ }
+ 
+ .Shaman {
+     color: #0070DE;
+ }
+ 
+ .Warlock {
+     color: #9482c9;
+ }
+ 
+ .Warrior {
+     color: #C79C6E;
+ }
+
+ /*Footer CSS */
+
+.footer-card-wrapper {
+    display: flex;
+    justify-content: center;
+    width:1600px;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom:20px;
+    overflow: auto;
+}
+
+.armory-card {
+  margin: 20px;
+  padding: 20px;
+  float: left;
+  background-image: url("/images/watermarks/wow.png");
+  background-size: 220px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(94, 20, 24, 0.6);
+  border-radius: 1rem;                                
+  border: 1px solid rgb(245, 212, 92);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+              0 4px 6px -4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.5s ease;
+}
+
+.armory-card:hover {
+  box-shadow: 0 0 20px rgb(245, 212, 92);
+}
+
+.raiderio-card {
+  margin: 20px;
+  padding: 20px;
+  float: left;
+  background-image: url("/images/watermarks/raiderio.png");
+  background-size: 250px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(94, 20, 24, 0.6);
+  border-radius: 1rem;                                
+  border: 1px solid rgb(245, 212, 92);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+              0 4px 6px -4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.5s ease;
+}
+
+.raiderio-card:hover {
+  box-shadow: 0 0 20px rgb(245, 212, 92);
+}
+
+.logs-card {
+  margin: 20px;
+  padding: 20px;
+  float: left;
+  background-image: url("/images/watermarks/logs.png");
+  background-size: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(94, 20, 24, 0.6);
+  border-radius: 1rem;                                
+  border: 1px solid rgb(245, 212, 92);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+              0 4px 6px -4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.5s ease;
+}
+
+.logs-card:hover {
+  box-shadow: 0 0 20px rgb(245, 212, 92);
+}
+
+ .footer-title {
+    margin:0px;
+    text-transform: uppercase;
+    font-family: 'inter';
+    color: #f9fafb;
+    font-weight: Bold;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.footer-text {
+    font-weight: 300;
+    font-family: 'inter';
+    color: #e5e7eb;
+    margin-top: 10px;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.copyright {
+    width: 100%;
+    border-top: 1px solid rgb(245, 212, 92);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.c-text {
+    text-align: center;
+    font-weight: 300;
+    font-family: 'inter';
+    color: #f5d45c;
+    margin-top: 10px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    display: block;
+}

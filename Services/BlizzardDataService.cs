@@ -48,7 +48,7 @@ namespace Singularity.Services
         public async Task<GuildViewModel> GetAllApiData()
         {
             var cacheKey = "GuildSummary";
-            if (_cache.TryGetValue(cacheKey, out GuildViewModel cachedData))
+            if (_cache.TryGetValue(cacheKey, out var cachedObj) && cachedObj is GuildViewModel cachedData && cachedData != null)
             {
                 return cachedData;
             }

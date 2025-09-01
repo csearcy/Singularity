@@ -8,8 +8,8 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -18,19 +18,22 @@
 
     <div class='webpage'>
         <div class='wrapper-left'>
-            <div class='banner-wrapper'>
-                <div class='banner'>
-                    <h1 class='banner-title'>Aphelion</h1>
-                </div>
-            </div>
+            
             <main id="main-content" role="main" class="pb-3 content-main">
                 @RenderBody()
             </main>
         </div>
 
-        <partial name="_Footer" />
+        <partial name="_RightMenu" />
+        
+    </div>
+    <div class='footer'>
+         <partial name="_Footer" />
         <script src="~/js/site.js"></script>
         @RenderSection("Scripts", required: false)
     </div>
+<div class="copyright"></div>
+    <p class="c-text">&copy; 2025 - Aphelion</p>
+</div>    
 </body>
 </html>

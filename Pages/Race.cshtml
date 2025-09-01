@@ -17,24 +17,17 @@
 @if (Model.RaceViewModel != null)
 {
     <div id="racecontent">
-    <div class="race-wrapper">
-        <div class="title-bar">
-            <div class="title-name">
-                <h2 class="title-text">Race to Realm 2nd</h2>
-            </div>
-        </div>
-            <div class="raidracemenu">
-                <select id="raid-dropdown" class="raid-dropdown form-control-sm form-select"
+    <div class="div-content">
+
+            <div id="racetitle" class="title-bar">
+                 <h2 class="title-text">Overall Rankings</h2>
+                 <select id="raid-dropdown" class="dropdown"
                     aria-label="Select Class..." name="class" onchange="onRaidChange(value)">
                     @foreach (var raid in Model.RaceViewModel.Raids)
                         {
                             <option value="@raid.Item1">@raid.Item2</option>
                         }
                     </select>
-                </div>
-
-            <div id="racetitle" class="title-bar-overall">
-                 <h2 class="team">Overall Rankings</h2>
             </div>
             <div id="race-div" class="race-div">
                 <div id="race-over-all" class="raceoveralltable">
@@ -44,10 +37,10 @@
                             <table id="guild-info-table-@team.TeamName" class="guildinfotable">
                                 <tbody>
                                     <tr>
-                                        <td class="guildinfotablerank">@team.Rank</td>
-                                        <td class="faction-cell-@team.Faction"></td>
-                                        <td class="guildinfoname">@team.TeamName</td>
-                                        <td class="guildinfotabledata">@team.Progress</td>
+                                        <td class="guildrank">@team.Rank</td>
+                                        <td class="guild-@team.Faction"></td>
+                                        <td class="guildname">@team.TeamName</td>
+                                        <td class="guilddata">@team.Progress</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -59,26 +52,34 @@
         <div id="boss-tables-id" class="boss-tables-class">
             @foreach (var boss in Model.RaceViewModel.BossRace.BossViewModels)
             {
-                <div class="race-wrapper boss" id="boss-@boss.NameSlug">
-                    <div class="boss-image">
-                            <img id="boss" src="@boss.ImageUrl">
-                        </div>
-                    <div id="boss-name-@boss.NameSlug" class="title-bar-race">
-                        <h2 class="team">@boss.Name</h2>
+                <div class="div-content" id="boss-@boss.NameSlug" style="background-image: url(@boss.ImageUrl); background-repeat: no-repeat; background-size: cover; background-position: center;">   
+                    <div id="boss-name-@boss.NameSlug" class="title-bar">
+                        <h2 class="title-text">@boss.Name</h2>
                     </div>
                         
-                    <div class="raceoveralltable">
+                    <div class="bossoveralltable">
+                        <div class="bossinfoheader">
+                            <table class="bossheadertable">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossheaderrank">Rank</td>
+                                        <td class="bossheadername">Guild</td>
+                                        <td class="bossheaderprogress">Best Pull</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         @foreach (var team in boss.RankingViewModels) 
                         {
                             <div class="guildinfo">
                                 <table id="guild-info-table-@team.TeamName" class="guildinfotable">
                                 <tbody>
                                     <tr>
-                                        <td class="bossinfotablerank">@team.Rank</td>
-                                        <td class="faction-cell2-@team.Faction"></td>
-                                        <td class="guildinfobosstable">@team.TeamName</td>
-                                        <td class="bossinfotabledata">@team.Progress</td>
-                                        <td class="guildinfotableprogress"> <progress max="100" value="@team.ProgressAsDouble"></progress></td>
+                                        <td class="bossrank">@team.Rank</td>
+                                        <td class="boss-@team.Faction"></td>
+                                        <td class="bosstable">@team.TeamName</td>
+                                        <td class="bossdata">@team.Progress</td>
+                                        <td class="bossprogress"> <progress max="100" value="@team.ProgressAsDouble"></progress></td>
                                     </tr>
                                 </tbody>
                             </table>
