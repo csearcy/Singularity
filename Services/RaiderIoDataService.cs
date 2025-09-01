@@ -224,7 +224,9 @@ namespace Singularity.Services
             {
                 { "nexusprincess-kyveza", "nexus-princess-kyveza" },
                 { "sikran-captain-of-the-sureki", "sikran" },
-                { "the-onearmed-bandit", "onearmed-bandit" }
+                { "the-onearmed-bandit", "onearmed-bandit" },
+                { "nexusking-salhadaar", "nexus-king-salhadaar" },
+                { "dimensius-the-alldevouring", "dimensius" }
             };
 
             if (specialSlugs.TryGetValue(bossName, out var slug))
