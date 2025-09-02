@@ -13,14 +13,12 @@
         <div id="member-name-div-@characterName" class="rostername @Model.Character?.CharacterClass?.Name.Replace(" ", "-")">
             @characterName
         </div>
-        <h16 class="rosterilvl">&nbsp;&nbsp;&nbsp;@Model.EquippedItemLevel</h16>
+        <h16 class="rosterclass">&nbsp;&nbsp;&nbsp;@Model.Character?.CharacterClass?.Name</h16><h16 class="rosterilvl">&nbsp;&nbsp;&nbsp;@Model.EquippedItemLevel Item level</h16>
         <table class="rosterbg" id="character-table-@characterName">
             <tbody>
                 <tr>
-                    <td class="rosterinfotitle">Class:</td>
-                    <td class="rosterinfo">@Model.Character?.CharacterClass?.Name</td>
                     <td class="rosterinfotitle">Race:</td>
-                    <td class="rosterinfo">@Model.Character?.Race?.Name</td>
+                    <td class="rosterinfo" colspan='2'>@Model.Character?.Race?.Name</td>
                  </tr>
                 <tr> 
                     <td class="rosterinfotitle">Spec:</td>
