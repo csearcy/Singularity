@@ -568,7 +568,7 @@ body {
 }
 
 .bosstable {
-    width: 34%;
+    width: 39%;
     white-space: nowrap;
     overflow: hidden;
     padding-left: 5px;
@@ -582,18 +582,6 @@ body {
 .bossrank {
     width: 4%;
     padding-left: 10px;
-    line-height: 45px;
-    text-align: center;
-    font-family: 'inter';
-    font-size: 1.0em;
-    color: #cccccc;
-    text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
-}
-
-.bossdata {
-    height: 45px;
-    width: 7%;
-    padding-right: 10px;
     line-height: 45px;
     text-align: center;
     font-family: 'inter';
@@ -618,6 +606,14 @@ body {
     height: 45px;
 }
 
+.boss- {
+    background: url(/images/race/wow.png);
+    background-repeat: no-repeat;
+    padding-right: 10px;
+    width: 5%;
+    height: 45px;
+}
+
 .bossprogress {
     height: 25px;
     width: 52%;
@@ -625,7 +621,6 @@ body {
     text-align: center;
     font-family: 'inter';
     font-size: 1.0em;
-    color: #cccccc;
     text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
 }
 
@@ -647,18 +642,16 @@ progress::-webkit-progress-bar {
 	height:10px;
 	width:100%;
 	margin:0 auto;
-	background-color: #949494;
-	border-radius: 5px;
-	box-shadow:0px 0px 6px #777 inset;
+	border: 1px solid rgb(30, 27, 75, .4);
+    border-radius: 5px;
+	
 }
 progress::-webkit-progress-value {
 	display:inline-block;
 	height:10px;
 	margin:0px -10px 0 0;
-	background: #00AEEF;
-    border: 1px, #000000;
+	background-image: linear-gradient(to right, rgb(147, 197, 253), rgb(139, 92, 246));
 	border-radius: 5px;
-	box-shadow:0px 0px 6px #777 inset;
 }
 progress:after {
 	margin:-26px 0 0 -7px;
@@ -666,6 +659,16 @@ progress:after {
 	display:inline-block;
 }
 
+.progress-text {
+    float: right;
+    margin:0px;
+    line-height: 20px;
+    text-transform: uppercase;
+    font-family: 'inter';
+    color: #C7D2FE;
+    font-weight: Bold;
+    font-size: .7em;
+}  
 .boss-image {
     margin-right: 20px;
     border-right: 1px solid #00AEEF;
