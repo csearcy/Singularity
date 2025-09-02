@@ -110,7 +110,7 @@ namespace Singularity.Services
                     BossName = boss?.Name ?? "N/A",
                     BossSlugName = boss?.Slug ?? "N/A",
                     BossImageUrl = GetBossImageUrl(boss?.Slug),
-                    BossRankings = GetTopBossRankings(data.BossRankings)
+                    BossRankings = GetTopBossRankings(boss?.Slug, data.BossRankings, raceModel?.RaidRankingParent?.RaidRankings)
                 });
             }
 
@@ -190,33 +190,109 @@ namespace Singularity.Services
             return filteredRankings;
         }
 
-        public List<Ranking> GetTopBossRankings(List<Ranking> bossRankings)
+        public List<Ranking> GetTopBossRankings(string bossSlug, List<Ranking> bossRankings, List<Ranking> raidRankings)
         {
+            //add guild rankings for guilds that have defeated the boss
             var filteredRankings = bossRankings
                 .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(r => r.Rank)
                 .Take(TopXBossRanks)
+                .Select((r, index) => { r.Rank = index + 1; return r; })
                 .ToList();
 
-            for (int i = 0; i < filteredRankings.Count; i++)
+            int rankingsLeftToFill = TopXBossRanks - filteredRankings.Count;
+
+            // add guild rankings for teams that have not beaten the boss, but have attempted
+            var encountersPulledFromGuilds = raidRankings
+                .SelectMany(r => r.EncountersPulled, (r, encounter) => new { Ranking = r, Encounter = encounter })
+                .Where(x => x.Encounter.Slug == GetBossSlug(bossSlug) &&
+                            x.Encounter.BestPercent != 0 &&
+                            (x.Encounter.IsDefeated ?? false) == false)
+                .OrderBy(x => x.Encounter.BestPercent)
+                .Take(rankingsLeftToFill);
+
+            foreach (var x in encountersPulledFromGuilds)
             {
-                filteredRankings[i].Rank = i + 1;
+                filteredRankings.Add(new Ranking
+                {
+                    Rank = filteredRankings.Count + 1,
+                    Guild = x.Ranking.Guild,
+                    EncountersPulled = x.Ranking.EncountersPulled,
+                    EncountersDefeated = x.Ranking.EncountersDefeated
+                });
             }
 
+            // add TBD fields for any remaining slots
             while (filteredRankings.Count < TopXBossRanks)
             {
                 filteredRankings.Add(new Ranking
                 {
                     Rank = filteredRankings.Count + 1,
-                    Guild = new Guild
-                    {
-                        Name = "TBD"
-                    }
+                    Guild = new Guild { Name = "TBD" }
                 });
             }
 
             return filteredRankings;
         }
+
+
+        // public List<Ranking> GetTopBossRankings(string bossSlug, List<Ranking> bossRankings, List<Ranking> raidRankings)
+        // {
+        //     var filteredRankings = bossRankings
+        //         .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
+        //         .OrderBy(r => r.Rank)
+        //         .Take(TopXBossRanks)
+        //         .Select((r, index) => { r.Rank = index + 1; return r; })
+        //         .ToList();
+
+        //     int rankingsLeftToFill = TopXBossRanks - filteredRankings.Count;
+        //     // for (int i = 0; i < filteredRankings.Count; i++)
+        //     // {
+        //     //     filteredRankings[i].Rank = i + 1;
+        //     //     rankingsLeftToFill--;
+        //     // }
+
+        //     // add rankings from raid rankings to fill in empty spots of boss rankings
+        //     var encountersPulledFromGuilds = raidRankings.SelectMany(s => s.EncountersPulled)
+        //         .Where(s => s.Slug == bossSlug && s.BestPercent != 0 && (!s.IsDefeated ?? false))
+        //         .OrderBy(s => s.BestPercent)
+        //         .Take(rankingsLeftToFill);
+        //     filteredRankings.AddRange(encountersPulledFromGuilds.Select(s =>
+        //     {
+        //         var guild = raidRankings.FirstOrDefault(x => x.EncountersPulled.First().Id == s.Id)?.Guild;
+        //         var ranking = new Ranking
+        //         {
+        //             Rank = filteredRankings.Count + 1,
+        //             Guild = guild
+        //         };
+        //         return ranking;
+        //     }));
+
+        //     // filteredRankings.Add(new Ranking
+        //     // {
+        //     //     Rank = filteredRankings.Count + 1,
+        //     //     Guild = new Guild
+        //     //     {
+        //     //         Name = "TBD"
+        //     //     }
+        //     // });
+
+        //     while (filteredRankings.Count < TopXBossRanks)
+        //     {
+        //         {
+        //             filteredRankings.Add(new Ranking
+        //             {
+        //                 Rank = filteredRankings.Count + 1,
+        //                 Guild = new Guild
+        //                 {
+        //                     Name = "TBD"
+        //                 }
+        //             });
+        //         }
+        //     }
+
+        //     return filteredRankings;
+        // }
 
         public string GetBossSlug(string bossName)
         {
@@ -244,7 +320,7 @@ namespace Singularity.Services
                 return "N/A";
             }
             var raidSlugName = Raids.First(s => s.IsCurrent).RaidSlugName;
-            
+
             var filePath = Path.Combine("wwwroot", "images", "race", "Bosses", raidSlugName, $"{bossSlug}.png");
 
             if (File.Exists(filePath))

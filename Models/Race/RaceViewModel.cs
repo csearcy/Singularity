@@ -35,7 +35,8 @@ namespace Singularity.Models.Race
                             Name = boss?.BossName ?? "TBD",
                             NameSlug = boss?.BossSlugName ?? "TBD",
                             ImageUrl = boss?.BossImageUrl ?? "TBD",
-                            RankingViewModels = raceModel.TopXBossRaceRanks.SelectMany(s => s.BossRankings.Select(ranking => new RankingViewModel
+                            RankingViewModels = raceModel.TopXBossRaceRanks.Where(s => s.BossSlugName == boss.BossSlugName).SelectMany(s => s.BossRankings)
+                            .Select(ranking => new RankingViewModel
                             {
                                 TeamName = ranking?.Guild?.Name ?? "TBD",
                                 Rank = ranking?.Rank.ToString() ?? "",
@@ -51,7 +52,7 @@ namespace Singularity.Models.Race
                                 "N/A" :  //boss not encountered                              
                                 $"{ranking?.EncountersPulled?.First(s => s.Slug == GetBossSlug(boss.BossSlugName)).BestPercent.ToString()}%", //boss encountered, but not defeated
                                 FirstDefeatedDate = ranking?.EncountersDefeated?.FirstOrDefault(s => s.Slug == GetBossSlug(boss.BossSlugName))?.FirstDefeated ?? null
-                            })).ToList() ?? new List<RankingViewModel>()
+                            }).ToList() ?? new List<RankingViewModel>()
                         }).ToList() ?? new List<BossViewModel>()
                     }
                 };
