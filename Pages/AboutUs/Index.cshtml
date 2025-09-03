@@ -6,28 +6,38 @@
     ViewData["Title"] = "About Us";
 }
 
-<div class='wrapper-content'>
-    <div class='title-bar'>
-        <div class='title-name'>
-            <h1 class='title-text'>Definition</h1>
-        </div>
-    </div>
-    <div class='div-content'>
-        <h1 class='content-text'>
-             The point in the orbit of a celestial body (such as a planet, comet, or asteroid) where it is farthest from the Sun.  The term comes from the Greek words "apo" (away) and "helios" (Sun). 
 
+<div class="overlay">
+    <div class="panel" role="status" aria-live="polite">
+      <!-- Decorative arcane sigil (SVG) -->
+      <svg class="sigil" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <radialGradient id="g" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#a6c9ff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#9c7cff" stop-opacity="0.6"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="44" fill="none" stroke="url(#g)" stroke-width="0.7"/>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="url(#g)" stroke-width="0.4"/>
+        <g stroke="url(#g)" stroke-width="0.5" fill="none" opacity="0.9">
+          <path d="M50 12 L63 38 L90 38 L68 56 L76 85 L50 69 L24 85 L32 56 L10 38 L37 38 Z"/>
+        </g>
+      </svg>
 
-  </h1>    
+      <h1>We’ll be back soon</h1>
+      <p>We’re performing a small ritual to upgrade the realm. Thanks for your patience—magic is brewing.</p>
+      <div class="orb" aria-hidden="true"></div>
+      <div class="seal" aria-hidden="true"></div>
+
+      <div class="particles" aria-hidden="true">
+        <span class="particle" style="--x:12%; --tx:6vw;  --dur:13s; animation-delay:-2s;"></span>
+        <span class="particle" style="--x:22%; --tx:-4vw; --dur:15s; animation-delay:-6s;"></span>
+        <span class="particle" style="--x:35%; --tx:3vw;  --dur:14s; animation-delay:-10s;"></span>
+        <span class="particle" style="--x:48%; --tx:-2vw; --dur:12s; animation-delay:-4s;"></span>
+        <span class="particle" style="--x:58%; --tx:5vw;  --dur:16s; animation-delay:-8s;"></span>
+        <span class="particle" style="--x:70%; --tx:-3vw; --dur:14s; animation-delay:-12s;"></span>
+        <span class="particle" style="--x:82%; --tx:2vw;  --dur:15s; animation-delay:-5s;"></span>
+        <span class="particle" style="--x:90%; --tx:-5vw; --dur:17s; animation-delay:-9s;"></span>
+      </div>
     </div>
-    <div class='title-bar'>
-        <div class='title-name'>
-            <h1 class='title-text'>About Us</h1>
-        </div>
-    </div>
-    <div class='div-content'>
-        <h1 class='content-text'>At Aphelion, we are a community of passionate and casual gamers united by our love for heroic progression raiding.</h1> <br>
-        <h1 class='content-text'>"Our goal is to create an inclusive, supportive, and fun environment where every player, regardless of experience or background, feels welcome and valued.</h1> <br>
-        <h1 class='content-text'>We strive to achieve success through teamwork, communication, and respect for each individual’s unique playstyle. Whether you're here to progress at your own pace or push heroic content with like-minded heroes, we believe in fostering a positive, encouraging space where all can grow, learn, and enjoy the journey together.  </h1>    
-            
-    </div>
-</div>
+  </div>

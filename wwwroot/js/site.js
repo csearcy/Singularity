@@ -1,22 +1,22 @@
 ﻿$(document).ready(function() {
     var dataIsReady = false;
 
-    function toggleFooterLinks() {
-        if ($('.show-footer3').length > 0) {
-            $('#footer3').show();
+    function toggleRightMenuLinks() {
+        if ($('.show-RightMenu3').length > 0) {
+            $('#RightMenu3').show();
         } else {
-            $('#footer3').hide();
+            $('#RightMenu3').hide();
         }
     }
 
-    toggleFooterLinks();
+    toggleRightMenuLinks();
     
     $('.nav-link').on('click', function(e) {
         e.preventDefault();
         var url = $(this).attr('href');
 
         $('#main-content').load(url + ' #main-content', function() {
-            toggleFooterLinks();
+            toggleRightMenuLinks();
         });
     });
     

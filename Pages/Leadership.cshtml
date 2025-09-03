@@ -12,64 +12,69 @@
         var requiresData = true;
     </script>
 }
-<div class='show-footer3'></div>
+
 @if (Model.GuildSummary != null)
 {
     @if (Model.GuildSummary.Roster != null && Model.GuildSummary.Roster.Members != null)
     {
+        
         var guildLeader = Model.GuildSummary.Roster.Members.FirstOrDefault(s => s.Rank ==
         (int)GuildViewModel.Roles.GuildLeader);
         if (guildLeader != null)
         {
-            <div class='title-bar'>
-                <div class='title-name'>
-                    <h1 class='title-text'>Guild Leader</h1>
-                </div>
-            </div>
-            @Html.Partial("_MemberDetails", guildLeader)
+            <div class='div-content'>
+            <div class="title-bar">
+                 <h2 class="title-text">Guild Leader</h2>
+     </div> 
+    <div class="raid-grid">
+            @Html.Partial("_LeadershipDetails", guildLeader)
+    </div>
+    </div>    
         }
-
+        var banker = Model.GuildSummary.Roster.Members.FirstOrDefault(s => s.Rank == (int)GuildViewModel.Roles.Banker);
+        if (banker != null)
+        {
+        <div class='div-content'>
+        <div class="title-bar">
+                 <h2 class="title-text">Treasurer</h2>
+        </div> 
+         <div class="raid-grid">   
+            @Html.Partial("_LeadershipDetails", banker)
+        </div>
+        </div>
+        } 
         var officers = Model.GuildSummary.Roster.Members.Where(s => s.Rank == (int)GuildViewModel.Roles.Officer);
         if (officers != null && officers.Any())
         {
-            <div class='title-bar'>
-                <div class='title-name'>
-                    <h1 class='title-text'>Officers</h1>
-                </div>
-            </div>
-
+            <div class='div-content'>
+            <div class="title-bar">
+                 <h2 class="title-text">Officers</h2>
+     </div> 
+        <div class="raid-grid">
             @foreach (var member in officers)
             {
-                @Html.Partial("_MemberDetails", member)
+                @Html.Partial("_LeadershipDetails", member)
             }
+        </div>
+        </div>    
         }
 
         var raidLeaders = Model.GuildSummary.Roster.Members.Where(s => s.Rank == (int)GuildViewModel.Roles.RaidLeader);
         if (raidLeaders.Any())
         {
-            <div class='title-bar'>
-                <div class='title-name'>
-                    <h1 class='title-text'>Raid Leaders</h1>
-                </div>
-            </div>
-
+            <div class='div-content'>
+             
+            <div class="title-bar">
+                 <h2 class="title-text">Raid Leaders</h2>
+     </div> 
+        <div class="raid-grid">
             @foreach (var member in raidLeaders)
             {
-                @Html.Partial("_MemberDetails", member)
+                @Html.Partial("_LeadershipDetails", member)
             }
-        }
-
-        <div class='title-bar'>
-            <div class='title-name'>
-                <h1 class='title-text'>Treasurer</h1>
-            </div>
         </div>
-
-        var banker = Model.GuildSummary.Roster.Members.FirstOrDefault(s => s.Rank == (int)GuildViewModel.Roles.Banker);
-        if (banker != null)
-        {
-            @Html.Partial("_MemberDetails", banker)
-        }
+        </div>
+        }  
     }
     else
     {

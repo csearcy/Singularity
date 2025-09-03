@@ -5,28 +5,28 @@
 }
 
 <div class="team-div">
+    <div class="player-overlay"></div>
     <div class="portrait">
         <img class="player-portrait" src="@Model.Media.AvatarUrl" />
     </div>
-    <div class="player-overlay"></div>
     <div class="player-info">
         <div id="member-name-div-@characterName" class="rostername @Model.Character?.CharacterClass?.Name.Replace(" ", "-")">
             @characterName
-            <h16 class="text">&nbsp;&nbsp;&nbsp;(@Model.EquippedItemLevel)</h16>
         </div>
+        <h16 class="rosterclass">&nbsp;&nbsp;&nbsp;@Model.Character?.CharacterClass?.Name</h16><h16 class="rosterilvl">&nbsp;&nbsp;&nbsp;@Model.EquippedItemLevel Item level</h16>
         <table class="rosterbg" id="character-table-@characterName">
             <tbody>
                 <tr>
-                    <td class="rosterinfotitle">Class:</td>
-                    <td class="rosterinfo">@Model.Character?.CharacterClass?.Name</td>
+                    <td class="rosterinfotitle">Race:</td>
+                    <td class="rosterinfo" colspan='2'>@Model.Character?.Race?.Name</td>
+                 </tr>
+                <tr> 
                     <td class="rosterinfotitle">Spec:</td>
-                    <td class="rosterinfo">@Model.Character?.ActiveSpec?.Name</td>
+                    <td class="rosterinfo">@Model.Character?.ActiveSpec?.Name</td>  
                     <td class="rosterinfotitle">Mythic+:</td>
                     <td class="rosterinfo">@Model.MythicRating</td>
                 </tr>
                 <tr>
-                    <td class="rosterinfotitle">Race:</td>
-                    <td class="rosterinfo">@Model.Character?.Race?.Name</td>
                     <td class="rosterinfotitle">Faction:</td>
                     <td class="rosterinfo">@Model.Character?.Faction?.Name</td>
                     <td class="rosterinfotitle">Raid:</td>

@@ -1,0 +1,40 @@
+@model Singularity.Models.BlizzardApiModels.Member
+
+@{
+    var characterName = Model.Character.Name;
+}
+
+<div class="leadership-div">
+    <div class="portrait">
+        <img class="player-portrait" src="@Model.Media.AvatarUrl" />
+    </div>
+    <div class="player-overlay"></div>
+    <div class="player-info">
+        <div id="member-name-div-@characterName" class="rostername @Model.Character?.CharacterClass?.Name.Replace(" ", "-")">
+            @characterName
+        </div>
+        <h16 class="rosterilvl">&nbsp;&nbsp;&nbsp;@Model.Character?.CharacterClass?.Name</h16>
+        <table class="rosterbg" id="character-table-@characterName">
+            <tbody>
+                <tr>
+                    <td class="rosterinfotitle">Class:</td>
+                    <td class="rosterinfo">@Model.Character?.CharacterClass?.Name</td>
+                    <td class="rosterinfotitle">Race:</td>
+                    <td class="rosterinfo">@Model.Character?.Race?.Name</td>
+                 </tr>
+                <tr> 
+                    <td class="rosterinfotitle">Spec:</td>
+                    <td class="rosterinfo">@Model.Character?.ActiveSpec?.Name</td>  
+                    <td class="rosterinfotitle">Mythic+:</td>
+                    <td class="rosterinfo">@Model.MythicRating</td>
+                </tr>
+                <tr>
+                    <td class="rosterinfotitle">Faction:</td>
+                    <td class="rosterinfo">@Model.Character?.Faction?.Name</td>
+                    <td class="rosterinfotitle">Raid:</td>
+                    <td class="rosterinfo">@Model.RaidProgress</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

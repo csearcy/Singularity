@@ -12,17 +12,14 @@
         var requiresData = true;
     </script>
 }
-
-<div class='title-bar'>
-    <div class='title-name'>
-        <h1 class='title-text'>Raid Team</h1>
-    </div>    
-</div>
-<div id='raidcontent' class='show-footer3'>
+<div id='raidcontent' class='div-content'>
+     <div class="title-bar">
+                 <h2 class="title-text">Raid Team</h2>
+     </div> 
+  <div class="raid-grid">
+                    
 @if (Model.GuildSummary != null)
 {
-    <div id="team-wrapper">
-        <div class='raid-title-bar'></div> 
         @if (Model.GuildSummary.Roster != null && Model.GuildSummary.Roster.Members != null)
         {
             @foreach(var member in Model.GuildSummary.Roster.Members.OrderBy(s => s.Rank))
@@ -34,10 +31,11 @@
         {
             @Html.Partial("_DataLoading")
         }       
-    </div> 
+
 }
 else
 {
     @Html.Partial("_DataLoading")
 }
+  </div>
 </div> 
