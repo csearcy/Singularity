@@ -13,27 +13,8 @@
 </head>
 
 <body>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <partial name="_Header" />
-
-    <div class='webpage'>
-        <div class='wrapper-left'>
-            
-            <main id="main-content" role="main" class="pb-3 content-main">
+    <div class="stars"></div>
                 @RenderBody()
-            </main>
-        </div>
-
-        <partial name="_RightMenu" />
-        
-    </div>
-    <div class='footer'>
-         <partial name="_Footer" />
-        <script src="~/js/site.js"></script>
-        @RenderSection("Scripts", required: false)
-    </div>
-<div class="copyright"></div>
-    <p class="c-text">&copy; 2025 - Aphelion</p>
-</div>    
+            
 </body>
 </html>
