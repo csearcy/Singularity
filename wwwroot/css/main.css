@@ -455,7 +455,6 @@ body {
     width: 100%;
     overflow: hidden;
     padding-left: 5px;
-    line-height: 45px;
     text-align: left;
     font-family: 'inter';
     font-size: 1.0em;
@@ -568,7 +567,7 @@ body {
 }
 
 .bosstable {
-    width: 39%;
+    width: 32%;
     white-space: nowrap;
     overflow: hidden;
     padding-left: 5px;
@@ -616,52 +615,87 @@ body {
 
 .bossprogress {
     height: 25px;
-    width: 52%;
+    width: 59%;
     padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
     text-align: center;
     font-family: 'inter';
     font-size: 1.0em;
     text-shadow: 1px 0 0 black, 0 1px 0 black, -1px 0 0 black, 0 -1px 0 black;
 }
 
-progress {
-	display:inline-block;
-    display:flex;
-    align-items:center;
-	width:100%;
-	height:10px;
-	margin:0;
-	background:none;
-	border: 0;
-	border-radius: 15px;
+.progress-bar {
+    margin-top: -10px;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 13px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgb(24, 24, 48); 
+    box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
 }
 
-progress::-webkit-progress-bar {
-    display:flex;
-    align-items:center;
-	height:10px;
-	width:100%;
-	margin:0 auto;
-	border: 1px solid rgb(30, 27, 75, .4);
-    border-radius: 5px;
-	
+.progress-bar::-webkit-progress-bar {
+  background: transparent;
 }
-progress::-webkit-progress-value {
-	display:inline-block;
-	height:10px;
-	margin:0px -10px 0 0;
-	background-image: linear-gradient(to right, rgb(147, 197, 253), rgb(139, 92, 246));
-	border-radius: 5px;
+
+.progress-bar::-webkit-progress-value {
+  background: linear-gradient(
+    90deg,
+    rgba(180, 110, 255, .2), 
+    rgba(90, 190, 255, .2)  
+  );
+  box-shadow: 0 0 10px rgba(160, 100, 255, 0.9),
+              inset 0 0 4px rgba(255, 255, 255, 0.4);
+  background-size: cover;
+  border-radius: 10px;
+  transition: width 1.2s ease-in-out forwards;
 }
-progress:after {
-	margin:-26px 0 0 -7px;
-	padding:0;
-	display:inline-block;
+
+.progress-bar::-moz-progress-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(180, 110, 255, .5),
+    rgba(90, 190, 255, .5)
+  );
+  box-shadow: 0 0 10px rgba(160, 100, 255, 0.9),
+              inset 0 0 4px rgba(255, 255, 255, 0.4);
+  background-size: cover;
+  border-radius: 10px;
+  transition: width 1.2s ease-in-out forwards;
+}
+
+.progress-bar-empty {
+    margin-top: -10px;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 13px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgb(24, 24, 48); 
+    box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
+}
+
+.progress-bar-empty::-webkit-progress-bar {
+  background: transparent;
+}
+
+.progress-bar-empty::-webkit-progress-value {
+  background: transparent;
+}
+
+.progress-bar-empty::-moz-progress-bar {
+  background: transparent;
 }
 
 .progress-text {
     float: right;
-    margin:0px;
+    margin-top:5px;
+    margin-bottom:-5px;
+    margin-right:5px;
     line-height: 20px;
     text-transform: uppercase;
     font-family: 'inter';

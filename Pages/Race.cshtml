@@ -78,7 +78,12 @@
                                         <td class="bossrank">@team.Rank</td>
                                         <td class="boss-@team.Faction"></td>
                                         <td class="bosstable">@team.TeamName</td>
-                                        <td class="bossprogress"><h5 class='progress-text'>@team.Progress</h5><progress max="100" value="@team.ProgressAsDouble"></progress></td>
+                                        <td class="bossprogress">
+                                            <h5 class='progress-text'>@team.Progress</h5>
+                                                        
+                                        <progress class='progress-bar' max="100" value="@team.ProgressAsDouble"></progress>
+                                        
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

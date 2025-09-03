@@ -46,3 +46,16 @@
 
     checkDataReady();
 });
+
+// Progress bar update function
+function updateProgressBar(currentValue) {
+        progressBar.value = currentValue; 
+        if (currentValue === $0) {
+            progressBar.classList.remove('progress-bar'); 
+            progressBar.classList.add('progress-bar-empty'); 
+        } else {
+            progressBar.classList.remove('progress-bar-empty');
+            progressBar.classList.add('progress-bar'); 
+        }
+    }
+
