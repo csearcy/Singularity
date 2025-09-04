@@ -48,16 +48,3 @@ $(document).ready(function () {
     checkDataReady();
 });
 
-// Progress bar update function
-const bossProgress = document.getElementById('boss-progress');
-
-function updateBossProgressClass() {
-  if (bossProgress.value === 0) {
-    bossProgress.classList.add('progress-bar-empty');
-    bossProgress.classList.remove('progress-bar');
-  } else {
-    bossProgress.classList.remove('progress-bar-empty');
-    bossProgress.classList.add('progress-bar');
-  }
-}
-

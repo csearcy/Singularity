@@ -42,9 +42,9 @@ namespace Singularity.Models.Race
                                 Rank = ranking?.Rank.ToString() ?? "",
                                 Faction = ranking?.Guild?.Faction ?? "",
                                 ProgressAsDouble = ranking.EncountersDefeated?.FirstOrDefault(s => s.Slug == GetBossSlug(boss.BossSlugName)) != null ?
-                                100 :
-                                (ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == GetBossSlug(boss.BossSlugName))?.IsDefeated) == null ?
                                 0 :
+                                (ranking?.EncountersPulled?.FirstOrDefault(s => s.Slug == GetBossSlug(boss.BossSlugName))?.IsDefeated) == null ?
+                                100 :
                                 ranking?.EncountersPulled?.First(s => s.Slug == GetBossSlug(boss.BossSlugName)).BestPercent,
                                 Progress = ranking.EncountersDefeated?.FirstOrDefault(s => s.Slug == GetBossSlug(boss.BossSlugName)) != null ?
                                 "DEFEATED" : // boss is defeated
