@@ -132,7 +132,6 @@ body {
 }
 
 .banner {
-    height: 385px;
     background-position: center;
     background-repeat:no-repeat;
     text-align: center;    
@@ -675,20 +674,23 @@ body {
     height: 13px;
     border-radius: 10px;
     overflow: hidden;
-    background: rgb(24, 24, 48); 
+    background: linear-gradient(rgb(255, 204, 51,.4), rgb(255, 240, 102,.4));
     box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
 }
 
 .progress-bar-empty::-webkit-progress-bar {
-  background: transparent;
+  background: linear-gradient(rgb(255, 204, 51,.4), rgb(255, 240, 102,.4));
+    box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
 }
 
 .progress-bar-empty::-webkit-progress-value {
-  background: transparent;
+  background: linear-gradient(rgb(255, 204, 51,.4), rgb(255, 240, 102,.4));
+    box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
 }
 
 .progress-bar-empty::-moz-progress-bar {
-  background: transparent;
+  background: linear-gradient(rgb(255, 204, 51,.4), rgb(255, 240, 102,.4));
+    box-shadow: inset 0 0 6px rgba(120, 120, 200, 0.4);
 }
 
 .progress-text {
