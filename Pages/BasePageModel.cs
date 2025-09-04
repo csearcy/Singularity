@@ -9,13 +9,14 @@ namespace Singularity.Pages {
     {
         private readonly IBlizzardDataService _blizzardDataService = blizzardDataService;
         private readonly IRaiderIoDataService _raiderIoDataService = raiderIoDataService;
+        private readonly BlizzardApiOptions _blizzardSettings;
         public GuildViewModel GuildSummary { get; private set; }
         public RaceViewModel RaceViewModel { get; private set; }
        
-        protected async Task LoadCommonDataAsync()
+        public async Task LoadCommonDataAsync(string raidName = null)
         {
-            GuildSummary = await _blizzardDataService.GetAllApiData();
-            RaceViewModel = RaceViewModel.ToViewModel(await _raiderIoDataService.GetAllApiData(GuildSummary.Bosses));
+            GuildSummary = await _blizzardDataService.GetCachedDataAsync(raidName);
+            RaceViewModel = RaceViewModel.ToViewModel(await _raiderIoDataService.GetCachedDataAsync(GuildSummary.Bosses, raidName));
         }
     }
 }

@@ -6,7 +6,8 @@ namespace Singularity.Services.Interfaces
 {
     public interface IBlizzardDataService
     {
-        Task<GuildViewModel> GetAllApiData();
         Task<bool> GetDataStatusAsync();
+        Task<GuildViewModel> PreloadDataAsync(string raidName);
+        Task<GuildViewModel> GetCachedDataAsync(string raidName);
     }
 }

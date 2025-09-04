@@ -1,6 +1,5 @@
-﻿$(document).ready(function() {
-    var dataIsReady = false;
-
+﻿
+$(document).ready(function () {
     function toggleRightMenuLinks() {
         if ($('.show-RightMenu3').length > 0) {
             $('#RightMenu3').show();
@@ -10,34 +9,36 @@
     }
 
     toggleRightMenuLinks();
-    
-    $('.nav-link').on('click', function(e) {
+
+    $('.nav-link').on('click', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
 
-        $('#main-content').load(url + ' #main-content', function() {
+        $('#main-content').load(url + ' #main-content', function () {
             toggleRightMenuLinks();
         });
     });
-    
-    function checkDataReady() {
-        if (typeof requiresData !== 'undefined' && requiresData && !dataIsReady) {
+
+    window.checkDataReady = function (raidName) {
+        if (typeof requiresData !== 'undefined' && requiresData) {
             $('body').addClass('loading-cursor');
-           $.ajax({
+
+            $.ajax({
                 url: '/api/data/status',
                 method: 'GET',
-                success: function(response) {
+                success: function (response) {
                     if (response.isReady) {
-                        dataIsReady = true;
-                        $('#main-content').load(window.location.href + ' #main-content', function() {
+                        let query = raidName ? `?raidName=${encodeURIComponent(raidName)}` : '';
+                        $.get(`/Race?handler=RaceTablesPartial${query}`, function (html) {
+                            $('#main-content').html(html).show();
                             $('.data-loading-overlay').remove();
                             $('body').removeClass('loading-cursor');
                         });
                     } else {
-                        setTimeout(checkDataReady, 3000);
+                        setTimeout(checkDataReady(raidName), 3000);
                     }
                 },
-                error: function() {
+                error: function () {
                     $('body').removeClass('loading-cursor');
                 }
             });

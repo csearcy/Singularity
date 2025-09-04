@@ -21,6 +21,8 @@ namespace Singularity.Services
         private readonly string TeamNameToIgnoreForRace;
         public readonly List<Raid> Raids;
         private static bool _dataIsReady = false;
+        private string _currentRaidName;
+        private string _currentRaidSlug;
 
         public RaiderIoDataService(IMemoryCache cache, IOptions<RaiderIoApiOptions> options, IRaiderIoApi raiderIoApi)
         {
@@ -41,23 +43,51 @@ namespace Singularity.Services
             return Task.FromResult(_dataIsReady);
         }
 
-        public async Task<RaceModel> GetAllApiData(List<Boss> bosses)
+        public async Task<RaceModel> PreloadDataAsync(List<Boss> bosses, string raidName)
         {
-            var cacheKey = "RaceSummary";
+            _dataIsReady = false;
+            _currentRaidName = raidName;
+            _currentRaidSlug = Raids.FirstOrDefault(s => s.RaidName == _currentRaidName)?.RaidSlugName ?? Raids.First(s => s.IsCurrent).RaidSlugName;
+            var result = await GetAllApiData(bosses, raidName);
+            _dataIsReady = true;
+            return result;
+        }
+
+        public Task<RaceModel> GetCachedDataAsync(List<Boss> bosses, string raidName)
+        {
+            _dataIsReady = false;
+            _currentRaidName = raidName ?? Raids.First(s => s.IsCurrent).RaidName;
+            _currentRaidSlug = Raids.FirstOrDefault(s => s.RaidName == _currentRaidName)?.RaidSlugName ?? Raids.First(s => s.IsCurrent).RaidSlugName;
+            var cacheKey = $"RaceSummary_{_currentRaidName}";
+                        
+            if (_cache.TryGetValue(cacheKey, out var cachedObj) && cachedObj is RaceModel cachedData)
+            {
+                _dataIsReady = true;
+                return Task.FromResult(cachedData);
+            }
+            
+
+            var result = GetAllApiData(bosses, _currentRaidSlug);
+            _dataIsReady = true;
+            return result;
+        }
+
+        private async Task<RaceModel> GetAllApiData(List<Boss> bosses, string raidSlug)
+        {
+            var cacheKey = $"RaceSummary_{_currentRaidName}";
             if (_cache.TryGetValue(cacheKey, out RaceModel cachedData))
             {
                 return cachedData;
             }
 
-            var raidName = Raids.First(s => s.IsCurrent).RaidSlugName;
             var raceModel = new RaceModel
             {
-                SelectedExpansion = raidName,
+                SelectedExpansion = raidSlug,
                 Raids = Raids,
                 BossCount = bosses.Count
             };
-            await GetRaidRankingsAsync(raceModel, raidName);
-            await GetTopXBossRankingsAsync(raceModel, bosses, raidName);
+            await GetRaidRankingsAsync(raceModel, raidSlug);
+            await GetTopXBossRankingsAsync(raceModel, bosses, raidSlug);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
@@ -65,14 +95,13 @@ namespace Singularity.Services
             };
             _cache.Set(cacheKey, raceModel, cacheEntryOptions);
 
-            _dataIsReady = true;
             return raceModel;
         }
 
-        private async Task<RaidRanking> GetRaidRankingsAsync(RaceModel raceModel, string raidName)
+        private async Task<RaidRanking> GetRaidRankingsAsync(RaceModel raceModel, string raidSlug)
         {
-            var (data, statusCode) = await GetCachedDataAsync($"RaceRankingData_{raidName}_{RaidDifficulty}",
-                    () => _raiderIoApi.GetRaidRankings(raidName, RaidDifficulty, RealmSlug));
+            var (data, statusCode) = await GetCachedDataAsync($"RaceRankingData_{raidSlug}_{RaidDifficulty}",
+                    () => _raiderIoApi.GetRaidRankings(raidSlug, RaidDifficulty, RealmSlug));
 
             if (statusCode == HttpStatusCode.OK && data != null)
             {
@@ -234,66 +263,7 @@ namespace Singularity.Services
 
             return filteredRankings;
         }
-
-
-        // public List<Ranking> GetTopBossRankings(string bossSlug, List<Ranking> bossRankings, List<Ranking> raidRankings)
-        // {
-        //     var filteredRankings = bossRankings
-        //         .Where(r => !r.Guild.Name.Equals(TeamNameToIgnoreForRace, StringComparison.OrdinalIgnoreCase))
-        //         .OrderBy(r => r.Rank)
-        //         .Take(TopXBossRanks)
-        //         .Select((r, index) => { r.Rank = index + 1; return r; })
-        //         .ToList();
-
-        //     int rankingsLeftToFill = TopXBossRanks - filteredRankings.Count;
-        //     // for (int i = 0; i < filteredRankings.Count; i++)
-        //     // {
-        //     //     filteredRankings[i].Rank = i + 1;
-        //     //     rankingsLeftToFill--;
-        //     // }
-
-        //     // add rankings from raid rankings to fill in empty spots of boss rankings
-        //     var encountersPulledFromGuilds = raidRankings.SelectMany(s => s.EncountersPulled)
-        //         .Where(s => s.Slug == bossSlug && s.BestPercent != 0 && (!s.IsDefeated ?? false))
-        //         .OrderBy(s => s.BestPercent)
-        //         .Take(rankingsLeftToFill);
-        //     filteredRankings.AddRange(encountersPulledFromGuilds.Select(s =>
-        //     {
-        //         var guild = raidRankings.FirstOrDefault(x => x.EncountersPulled.First().Id == s.Id)?.Guild;
-        //         var ranking = new Ranking
-        //         {
-        //             Rank = filteredRankings.Count + 1,
-        //             Guild = guild
-        //         };
-        //         return ranking;
-        //     }));
-
-        //     // filteredRankings.Add(new Ranking
-        //     // {
-        //     //     Rank = filteredRankings.Count + 1,
-        //     //     Guild = new Guild
-        //     //     {
-        //     //         Name = "TBD"
-        //     //     }
-        //     // });
-
-        //     while (filteredRankings.Count < TopXBossRanks)
-        //     {
-        //         {
-        //             filteredRankings.Add(new Ranking
-        //             {
-        //                 Rank = filteredRankings.Count + 1,
-        //                 Guild = new Guild
-        //                 {
-        //                     Name = "TBD"
-        //                 }
-        //             });
-        //         }
-        //     }
-
-        //     return filteredRankings;
-        // }
-
+        
         public string GetBossSlug(string bossName)
         {
             var specialSlugs = new Dictionary<string, string>
@@ -318,14 +288,13 @@ namespace Singularity.Services
             if (string.IsNullOrEmpty(bossSlug))
             {
                 return "N/A";
-            }
-            var raidSlugName = Raids.First(s => s.IsCurrent).RaidSlugName;
+            }           
 
-            var filePath = Path.Combine("wwwroot", "images", "race", "Bosses", raidSlugName, $"{bossSlug}.png");
+            var filePath = Path.Combine("wwwroot", "images", "race", "Bosses", _currentRaidSlug, $"{bossSlug}.png");
 
             if (File.Exists(filePath))
             {
-                return $"/images/race/Bosses/{raidSlugName}/{bossSlug}.png";
+                return $"/images/race/Bosses/{_currentRaidSlug}/{bossSlug}.png";
             }
 
             return "/images/race/Bosses/default.png";

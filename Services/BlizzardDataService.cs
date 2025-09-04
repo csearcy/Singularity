@@ -14,6 +14,7 @@ namespace Singularity.Services
         private readonly SemaphoreSlim _cacheLock = new(1, 1);
         private readonly IBlizzardApi _blizzardApi;
         private static bool _dataIsReady = false;
+        private string _currentRaid;
         private readonly string RealmSlug;
         private readonly string GuildNameSlug;
         private readonly string? TokenEndpoint;
@@ -45,9 +46,35 @@ namespace Singularity.Services
             return Task.FromResult(_dataIsReady);
         }
 
-        public async Task<GuildViewModel> GetAllApiData()
+        public async Task<GuildViewModel> PreloadDataAsync(string raidName)
         {
-            var cacheKey = "GuildSummary";
+            _dataIsReady = false;
+            _currentRaid = raidName;
+            var result = await GetAllApiData(raidName);
+            _dataIsReady = true;
+            return result;
+        }
+
+        public Task<GuildViewModel> GetCachedDataAsync(string raidName)
+        {
+            _dataIsReady = false;
+            _currentRaid = raidName ?? Raids.First(s => s.IsCurrent).BlizzardApiName;
+            var cacheKey = $"GuildSummary_{_currentRaid}";
+            if (_cache.TryGetValue(cacheKey, out var cachedObj) && cachedObj is GuildViewModel cachedData)
+            {
+                _dataIsReady = true;
+                return Task.FromResult(cachedData);
+            }
+            
+            var result = GetAllApiData(_currentRaid);
+            _dataIsReady = true;
+            return result;
+        }
+
+        private async Task<GuildViewModel> GetAllApiData(string raidName)
+        {
+            var cacheKey = $"GuildSummary_{_currentRaid}";
+
             if (_cache.TryGetValue(cacheKey, out var cachedObj) && cachedObj is GuildViewModel cachedData && cachedData != null)
             {
                 return cachedData;
@@ -57,7 +84,6 @@ namespace Singularity.Services
 
             var rosterTask = GetRosterDataAsync();
             var mythicKeystoneSeasonIndexTask = GetMythicKeystoneSeasonsIndexDataAsync();
-            var currentRaidName = Raids.First(s => s.IsCurrent).BlizzardApiName;
             var journalSeasonIndexTask = GetJournalSeasonIndexDataAsync();
 
             await Task.WhenAll(rosterTask, mythicKeystoneSeasonIndexTask, journalSeasonIndexTask);
@@ -65,7 +91,7 @@ namespace Singularity.Services
             {
                 Roster = await rosterTask,
                 MythicKeystoneSeasonIndex = await mythicKeystoneSeasonIndexTask,
-                CurrentRaidInstanceId = journalSeasonIndexTask.Result.Instances.FirstOrDefault(s => s.Name == currentRaidName)?.Id
+                CurrentRaidInstanceId = journalSeasonIndexTask.Result.Instances.FirstOrDefault(s => s.Name == raidName)?.Id
             };
 
             if (guildSummary?.Roster?.Members == null)
@@ -75,21 +101,19 @@ namespace Singularity.Services
 
             var journalExpansionTask = GetJournalExpansionDataAsync(guildSummary);
             var characterMediaTask = FetchCharacterMediaData(guildSummary);
-            var characterMythicKeystoneSeasonTask =  FetchCharacterMythicKeystoneSeason(guildSummary);
-            var characterProfileSummariesTask =  FetchCharacterProfileSummaries(guildSummary);
-            var characterRaidTask =  FetchCharacterRaidData(guildSummary);
+            var characterMythicKeystoneSeasonTask = FetchCharacterMythicKeystoneSeason(guildSummary);
+            var characterProfileSummariesTask = FetchCharacterProfileSummaries(guildSummary);
+            var characterRaidTask = FetchCharacterRaidData(guildSummary);
             var journalInstanceTask = GetJournalInstance(guildSummary.CurrentRaidInstanceId);
 
             await Task.WhenAll(journalExpansionTask, characterMediaTask, characterMythicKeystoneSeasonTask, characterProfileSummariesTask, characterRaidTask, journalInstanceTask);
             await GetBosses(guildSummary, journalInstanceTask.Result.Encounters);
-            
+
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
             _cache.Set(cacheKey, guildSummary, cacheEntryOptions);
-
-            _dataIsReady = true;
             return guildSummary;
         }
 
@@ -185,14 +209,13 @@ namespace Singularity.Services
                 }
 
                 var realmSlug = member?.Character?.Realm?.Slug ?? RealmSlug;
-                var (data, statusCode) = await GetCachedDataAsync($"CharacterRaidData_{characterName}",
+                var (data, statusCode) = await GetCachedDataAsync($"CharacterRaidData_{_currentRaid}_{characterName}",
                     () => _blizzardApi.GetCharacterRaids(realmSlug, characterName, $"Bearer {_accessToken}"));
 
                 if(statusCode == HttpStatusCode.OK && data != null)
                 {
                     var expansions = data.Expansions.FirstOrDefault(s => s.Expansion.Id == guildSummary.CurrentExpansionId);
-                    var currentRaidName = Raids.FirstOrDefault(r => r.IsCurrent)?.BlizzardApiName;
-                    var instance = expansions?.Instances.FirstOrDefault(i => i.Instance?.Name == currentRaidName)?.Modes
+                    var instance = expansions?.Instances.FirstOrDefault(i => i.Instance?.Name == _currentRaid)?.Modes
                         .FirstOrDefault(m => m.Difficulty.Name == RaidDifficulty);
 
                     var raidProgress = "N/A";
@@ -284,14 +307,14 @@ namespace Singularity.Services
 
         public async Task<JournalSeasonIndex> GetJournalSeasonIndexDataAsync()
         {
-            var (data, statusCode) = await GetCachedDataAsync($"InstanceIdData",
+            var (data, statusCode) = await GetCachedDataAsync($"InstanceIdData_{_currentRaid}",
                 () => _blizzardApi.GetJournalSeasonIndex($"Bearer {_accessToken}"));
             return statusCode == HttpStatusCode.OK ? data : new JournalSeasonIndex();
         }
 
         public async Task<JournalExpansion> GetJournalExpansionDataAsync(GuildViewModel guildSummary)
         {
-            var (data, statusCode) = await GetCachedDataAsync("JournalExpansionData",
+            var (data, statusCode) = await GetCachedDataAsync($"JournalExpansionData_{_currentRaid}",
                 () => _blizzardApi.GetJournalExpansionData($"Bearer {_accessToken}"));
 
             if (statusCode == HttpStatusCode.OK && data != null) {
@@ -308,7 +331,7 @@ namespace Singularity.Services
                 return new JournalInstance();
             }
 
-            var (data, statusCode) = await GetCachedDataAsync($"JournalExpansionData_{instanceId}",
+            var (data, statusCode) = await GetCachedDataAsync($"JournalExpansionData_{_currentRaid}_{instanceId}",
                 () => _blizzardApi.GetJournalInstance(instanceId.ToString(), $"Bearer {_accessToken}"));
 
             if (statusCode == HttpStatusCode.OK && data != null) {
@@ -366,7 +389,7 @@ namespace Singularity.Services
 
         public async Task<JournalEncounter?> GetJournalEncounter(int encounterId)
         {
-            var (data, statusCode) = await GetCachedDataAsync($"JournalEncounterData_{encounterId}",
+            var (data, statusCode) = await GetCachedDataAsync($"JournalEncounterData_{_currentRaid}_{encounterId}",
                 () => _blizzardApi.GetJournalEncounter(encounterId.ToString(), $"Bearer {_accessToken}"));
 
             if (statusCode == HttpStatusCode.OK && data != null)
@@ -384,7 +407,7 @@ namespace Singularity.Services
                 return null;
             }
 
-            var (data, statusCode) = await GetCachedDataAsync($"CreatureMediaData_{creatureDisplayId}",
+            var (data, statusCode) = await GetCachedDataAsync($"CreatureMediaData_{_currentRaid}_{creatureDisplayId}",
                 () => _blizzardApi.GetCreatureDisplayMedia(creatureDisplayId.ToString(), $"Bearer {_accessToken}"));
 
             if (statusCode == HttpStatusCode.OK && data != null)

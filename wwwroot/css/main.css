@@ -700,15 +700,12 @@ progress:after {
   }
 
 .data-loading-overlay {
-    position: absolute;
+    inset: 0;
     width: 99%;
-    height: 98%;
-    top: 10px;
-    left: 10px;
+    height: 97%;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
     background-color: rgb(15, 18, 31);
     border-radius: 1rem;                                   
     border: 1px solid rgb(31, 41, 55);

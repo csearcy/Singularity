@@ -10,7 +10,7 @@ namespace Singularity.Controllers
         private readonly IBlizzardDataService _blizzardDataService;
         private readonly IRaiderIoDataService _raiderIoDataService;
 
-        public DataStatusController(IBlizzardDataService blizzardDataService, IRaiderIoDataService raiderIoDataService)        
+        public DataStatusController(IBlizzardDataService blizzardDataService, IRaiderIoDataService raiderIoDataService)
         {
             _blizzardDataService = blizzardDataService;
             _raiderIoDataService = raiderIoDataService;
@@ -23,6 +23,15 @@ namespace Singularity.Controllers
             var raiderIoDataStatus = await _raiderIoDataService.GetDataStatusAsync();
             var dataStatus = blizzardDataStatus && raiderIoDataStatus;
             return Ok(new { isReady = dataStatus });
+        }
+
+        [HttpGet("load")]
+        public async Task<IActionResult> LoadRaid([FromQuery] string raidName)
+        {
+            var guildSummary = await _blizzardDataService.PreloadDataAsync(raidName);
+            await _raiderIoDataService.PreloadDataAsync(guildSummary.Bosses, raidName);
+            
+            return Accepted();
         }
     }
 }

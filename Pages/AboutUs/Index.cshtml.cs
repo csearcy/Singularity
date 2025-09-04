@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Singularity.Services.Interfaces;
 
 namespace Singularity.Pages.AboutUs
@@ -9,6 +10,11 @@ namespace Singularity.Pages.AboutUs
         public void OnGet()
         {
             _ = LoadCommonDataAsync();
+        }
+
+        public IActionResult OnGetDataLoading()
+        {
+            return Partial("_DataLoading");
         }
     }
 }

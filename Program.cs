@@ -43,7 +43,8 @@ builder.Services.AddHttpClient<IRaiderIoDataService, RaiderIoDataService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IBlizzardDataService, BlizzardDataService>();
 builder.Services.AddScoped<IRaiderIoDataService, RaiderIoDataService>();
-
+builder.Services.Configure<BlizzardApiOptions>(
+builder.Configuration.GetSection("BlizzardAPI"));
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -54,8 +55,9 @@ if (!app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();    
+    var blizzardDataService = scope.ServiceProvider.GetRequiredService<IBlizzardDataService>();
     var raiderIoService = scope.ServiceProvider.GetRequiredService<IRaiderIoDataService>();  
+
 }
 
 app.UseHttpsRedirection();

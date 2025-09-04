@@ -1,0 +1,84 @@
+@using Singularity.Models.Race
+@model RaceViewModel
+
+@{
+    var defaultRaid = ViewData["DefaultRaidSlug"] as string ?? "";
+}
+
+@if (Model != null)
+{
+    <div class="div-content">
+        <div id="racetitle" class="title-bar">
+            <h2 class="title-text">Overall Rankings</h2>
+            <select id="raid-dropdown" class="dropdown" aria-label="Select Class..." name="class">
+                @foreach (var raid in Model.Raids)
+                {
+                    <option value="@raid.Item1" selected="@(raid.Item1 == defaultRaid ? "selected=\"selected\"" : "")">@raid.Item2</option>
+                }
+            </select>
+        </div>
+        <div id="race-div" class="race-div">
+            <div id="race-over-all" class="raceoveralltable">
+                @foreach (var team in Model.RealmRace.RankingViewModels)
+                {
+                    <div id="guild-info-@team.TeamName" class="guildinfo">
+                        <table id="guild-info-table-@team.TeamName" class="guildinfotable">
+                            <tbody>
+                                <tr>
+                                    <td class="guildrank">@team.Rank</td>
+                                    <td class="guild-@team.Faction"></td>
+                                    <td class="guildname">@team.TeamName</td>
+                                    <td class="guilddata">@team.Progress</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div id="boss-tables-id" class="boss-tables-class">
+        @foreach (var boss in Model.BossRace.BossViewModels)
+        {
+            <div class="div-content" id="boss-@boss.NameSlug"
+                style="background-image: url(@boss.ImageUrl); background-repeat: no-repeat; background-size: cover; background-position: center;">
+                <div id="boss-name-@boss.NameSlug" class="title-bar">
+                    <h2 class="title-text">@boss.Name</h2>
+                </div>
+
+                <div class="bossoveralltable">
+                    <div class="bossinfoheader">
+                        <table class="bossheadertable">
+                            <tbody>
+                                <tr>
+                                    <td class="bossheaderrank">Rank</td>
+                                    <td class="bossheadername">Guild</td>
+                                    <td class="bossheaderprogress">Best Pull</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @foreach (var team in boss.RankingViewModels)
+                    {
+                        <div class="guildinfo">
+                            <table id="guild-info-table-@team.TeamName" class="guildinfotable">
+                                <tbody>
+                                    <tr>
+                                        <td class="bossrank">@team.Rank</td>
+                                        <td class="boss-@team.Faction"></td>
+                                        <td class="bosstable">@team.TeamName</td>
+                                        <td class="bossprogress">
+                                            <h5 class='progress-text'>@team.Progress</h5><progress max="100"
+                                                value="@team.ProgressAsDouble"></progress>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+                <div class="wrapper-footer"></div>
+            </div>
+        }
+    </div>
+}
