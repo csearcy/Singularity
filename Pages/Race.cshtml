@@ -80,9 +80,9 @@
                                         <td class="bosstable">@team.TeamName</td>
                                         <td class="bossprogress">
                                             <h5 class='progress-text'>@team.Progress</h5>
-                                                        
-                                        <progress class='progress-bar' max="100" value="@team.ProgressAsDouble"></progress>
-                                        
+                                    
+                                        <progress id='boss-progress' class='progress-bar' max="100" value="@team.ProgressAsDouble"></progress>
+                                        <script>updateBossProgressClass();</script>    
                                         </td>
                                     </tr>
                                 </tbody>

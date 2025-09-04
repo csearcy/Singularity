@@ -644,8 +644,8 @@ body {
 .progress-bar::-webkit-progress-value {
   background: linear-gradient(
     90deg,
-    rgba(180, 110, 255, .2), 
-    rgba(90, 190, 255, .2)  
+    rgba(180, 110, 255, .7), 
+    rgba(90, 190, 255, .7)  
   );
   box-shadow: 0 0 10px rgba(160, 100, 255, 0.9),
               inset 0 0 4px rgba(255, 255, 255, 0.4);
