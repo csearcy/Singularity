@@ -1,0 +1,21 @@
+@page "/streams"
+@using Singularity.Pages.AboutUs;
+
+@model IndexModel
+@{
+    ViewData["Title"] = "VoDs";
+}
+
+<div class='wrapper-content'>
+    <div class='div-content'>
+        <div class="title-bar">
+                        <h2 class="title-text">Streams</h2>
+        </div>
+        <div  class='streams-div'>
+            <div class='streams-video-div'>
+                <embed id='stream-embed' src="https://player.twitch.tv/?channel=corviines&parent=localhost" width="100%" height="100%" allowfullscreen></embed>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -175,6 +175,7 @@ body {
 
 /* wrapper-left layout*/
 .div-content {
+    overflow: hidden;
     margin: 10px;
     margin-bottom: 20px;
     font-family: 'inter';
@@ -821,6 +822,29 @@ box-shadow: 0 0 12px rgba(255, 230, 120, 0.8), inset 0 0 6px rgba(255, 255, 200,
     color: #C7D2FE;        
     margin-bottom: 0.75rem;
 }
+
+/* VoDs CSS */
+.streams-video {
+    width: 100%;
+    height: 100%;
+    margin-left: 20px;
+    display: block;
+    border-radius: 4px;
+    align-content: left;
+}
+
+.streams-video-div {
+    float: left;
+    aspect-ratio: 16/9;
+    width: 60%;
+}
+
+.streams-description {
+    float: right;
+    aspect-ratio: 16/9;
+    width: 35%;
+}
+
 
  /*Footer CSS */
 

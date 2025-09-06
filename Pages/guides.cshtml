@@ -1,0 +1,27 @@
+@page "/guides"
+@using Singularity.Pages.AboutUs;
+
+@model IndexModel
+@{
+    ViewData["Title"] = "VoDs";
+}
+
+<div class='wrapper-content'>
+    <div class='div-content'>
+        <div class="title-bar">
+                        <h2 class="title-text">Guides</h2>
+        </div>
+        <div  class='streams-div'>
+            <div class='streams-video-div'>
+                <embed id='guides-embed' class='streams-video' src="https://www.youtube.com/embed/FLYqJg6NhCM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+            </div>
+        </div>
+        <div  class='streams-description'>
+            <h1 class='content-text'>
+                Hey guys, this seaason we're using the boss strategies from "Ready Check Pull" Check them out here:<br>
+                <a class='menu' href="https://www.youtube.com/@@ReadyCheckPull" class="nav-link" target='new_window'>Ready Check Pull</a>
+            
+            </h1> 
+        </div>
+    </div>
+</div>
